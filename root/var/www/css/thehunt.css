@@ -28,6 +28,16 @@ body {
   text-align: center;
 }
 
+.picture-cipher {
+  font-size: 2em;
+}
+
+.picture-cipher-img {
+  width: 125px;
+  height: 100px;
+  vertical-align: middle;
+}
+
 #stageOneCode {
   font-family: monospace;
   letter-spacing: 0.5em;

@@ -45,7 +45,7 @@ function getNotifications() {
   return;
 }
 
-function submit(stage) {
+function submit() {
   var elements = document.getElementById("form").children;
   var values = [];
   for(var i = 0; i < elements.length; i++){
@@ -54,7 +54,7 @@ function submit(stage) {
       values.push(item.name + "=" + item.value);
     }
   }
-  var url = URL + "stage/" + stage + "?" + values.join('&');
+  var url = URL + "submit" + "?" + values.join('&');
   ajax("GET", url, function (response) {
     if (response['correct']) {
       setStage(response['stage']);
@@ -79,11 +79,12 @@ function getTableFromCookie() {
   return null;
 }
 
-function clearContent() {
+function clear() {
   var content = document.getElementById("content");
   while (content.firstChild) {
     content.removeChild(content.firstChild);
   }
+  hideToaster();
 }
 
 function submitTable() {
@@ -119,12 +120,23 @@ function setFooter(stage) {
   footerElement.innerHTML = stage;
 }
 
+function createSubmitForm(table, stage) {
+  return `
+<div id="form">
+  <input type="text" id="form_table" name="answer">
+  <input type="hidden" value=${table} name="table">
+  <input type="hidden" value=${stage} name="stage">
+  <input type="button" value="Submit" onClick="submit()">
+</div>
+  `;
+}
+
 // Stages
 function setStageZero() {
   var page = `
 <div>
-  <p class="story">Oh no! What?!?! How can this be?! The wedding ring is missing! In all of the excitement and chaos, the Bridal party has misplaced the wedding ring and has no idea where it could be. They’ve looked high; they’ve looked low; they’ve even looked in between a few places but have come up empty handed. They’ve managed to keep the newly weds from finding out their blunder but the night is quickly coming to an end, and they need your help! The Best Man remembers seeing the bride with the ring when they got to the reception area, so they know it’s somewhere here. Retrace all the steps of the bridal party and put on your deerstalker cap. Piece together the clues to find the missing ring and return it to the new bride before she even notices.</p>
-  <p class="story">What table are you currently sitting at?</p>
+  <p class="story">Oh no! What?!?! How can this be?! The wedding ring is missing! In all of the excitement and chaos, the Bridal party has misplaced the wedding ring and has no idea where it could be. They’ve looked high; they’ve looked low; they’ve even looked in between a few places but have come up empty handed. They’ve managed to keep the newly weds from finding out their blunder but the night is quickly coming to an end, and they need your help! The Maid of Honor remembers seeing the bride with the ring right after the ceremony, so they know it’s somewhere here. Retrace all the steps of the bridal party and put on your deerstalker cap. Piece together the clues to find the missing ring and return it to the new bride before she even notices.</p>
+  <p class="story">Which table are you part of?</p>
   <div id="form">
     <input type="text" id="form_table" name="table">
     <input type="button" value="Submit" onClick="submitTable()">
@@ -139,11 +151,7 @@ function setStageOne(table) {
 <div>
   <p class="story">Bryan, a groomsman, had to place the table numbers on the table when he got to the venue. He found some peculiar letters at your table but didn’t think too much of it.</p>
   <div id="stageOneCode"></div>
-  <div id="form">
-    <input type="text" id="stageOne" name="answer">
-    <input type="hidden" id="table" value=${table} name="table">
-    <input type="button" value="Submit" onClick="submit(1)">
-  </div>
+${createSubmitForm(table, 1)}
 </div>
   `;
   setContent(page);
@@ -154,10 +162,20 @@ function setStageOne(table) {
   });
 }
 
-function setStageTwo() {
+function setStageTwo(table) {
   var page = `
 <div>
-  Picture Cipher here
+  <div class="picture-cipher">
+    <img class="picture-cipher-img" src="/images/thehunt/cold.jpg" />
+    <span>+</span>
+    <img class="picture-cipher-img" src="/images/thehunt/cold-water.jpg" />
+    <span>+</span>
+    <img class="picture-cipher-img" src="/images/thehunt/cow.jpg" />
+    <span>+</span>
+    <img class="picture-cipher-img" src="/images/thehunt/whisk.jpg" />
+    <span>=</span>
+  </div>
+${createSubmitForm(table, 2)}
 </div>
   `;
   setContent(page);
@@ -165,14 +183,14 @@ function setStageTwo() {
 
 function setStage(stage) {
   var table = getTableFromCookie();
-  clearContent();
+  clear();
   setHeader(table);
   if (stage === 0) {
     setStageZero();
   } else if (stage === 1) {
     setStageOne(table);
   } else if (stage === 2) {
-    setStageTwo();
+    setStageTwo(table);
   }
   setFooter(stage);
 }
