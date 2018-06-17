@@ -170,6 +170,8 @@ function setStageTwo(table) {
     <span>+</span>
     <img class="picture-cipher-img" src="/images/thehunt/cold-water.jpg" />
     <span>+</span>
+  </div>
+  <div class="picture-cipher">
     <img class="picture-cipher-img" src="/images/thehunt/cow.jpg" />
     <span>+</span>
     <img class="picture-cipher-img" src="/images/thehunt/whisk.jpg" />

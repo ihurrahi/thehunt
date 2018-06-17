@@ -33,9 +33,10 @@ body {
 }
 
 .picture-cipher-img {
-  width: 125px;
+  width: 150px;
   height: 100px;
   vertical-align: middle;
+  margin: 0.25em;
 }
 
 #stageOneCode {
