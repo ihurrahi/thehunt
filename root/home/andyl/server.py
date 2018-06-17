@@ -5,7 +5,8 @@ from string import ascii_lowercase
 app = Flask(__name__)
 
 state = {}
-STAGE_ONE_ANSWER = 'qwerty'
+STAGE_ONE_ANSWER = 'diamond'
+STAGE_TWO_ANSWER = 'icecream'
 
 @app.route("/api/table/<number>")
 def table_state(number):
@@ -18,11 +19,15 @@ def table_state(number):
 
 @app.route("/api/stage/<number>")
 def stage(number):
-  response = {'stage': number, 'message': 'incorrect'}
+  response = {'stage': number, 'correct': False, 'message': 'incorrect'}
+  answer = request.args.get('answer', '').replace(' ', '')
+  table = request.args.get('table', '')
   if number == '1':
-    table = request.args.get('table', '')
-    if request.args.get('answer', '') == STAGE_ONE_ANSWER:
-      response = {'stage': 2}
+    if answer == STAGE_ONE_ANSWER:
+      response = {'stage': 2, 'correct': True}
+  elif number == '2':
+    if answer == STAGE_TWO_ANSWER:
+      response = {'stage': 3, 'correct': True}
   else:
     print 'Unknown stage number %s' % number
 
@@ -34,7 +39,7 @@ def stageOneCode():
 
   code = ''
   for char in STAGE_ONE_ANSWER:
-    index = ascii_lowercase.find(char) + table
+    index = (ascii_lowercase.find(char) + table) % 26
     code += ascii_lowercase[index]
 
   return jsonify({ 'code': code })

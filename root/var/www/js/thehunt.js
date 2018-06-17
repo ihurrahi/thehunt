@@ -3,9 +3,9 @@ var URL = "http://thinkingalaud.com/api/";
 function setToaster(value) {
   var toaster = document.getElementById("toaster");
   var toast = `
-  <div>
+  <div class="toaster-content">
     ${value}
-    <span onClick="hideToaster()">x</span>
+    <span onClick="hideToaster()" class="toaster-hide">❌</span>
   <div>
 `;
   toaster.innerHTML = toast;
@@ -56,7 +56,9 @@ function submit(stage) {
   }
   var url = URL + "stage/" + stage + "?" + values.join('&');
   ajax("GET", url, function (response) {
-    
+    if (response['correct']) {
+      setStage(response['stage']);
+    }
   });
 }
 
@@ -88,7 +90,7 @@ function submitTable() {
   var table = document.getElementById("form_table").value;
   getCurrentStage(table, function (response) {
     document.cookie = `table=${table}`;
-    setStage(table, response['stage']);
+    setStage(response['stage']);
   });
 }
 
@@ -112,11 +114,17 @@ function setContent(content) {
   contentElement.innerHTML = content;
 }
 
+function setFooter(stage) {
+  var footerElement = document.getElementById("footer");
+  footerElement.innerHTML = stage;
+}
+
 // Stages
 function setStageZero() {
   var page = `
 <div>
-  <p>What table are you at?</p>
+  <p class="story">Oh no! What?!?! How can this be?! The wedding ring is missing! In all of the excitement and chaos, the Bridal party has misplaced the wedding ring and has no idea where it could be. They’ve looked high; they’ve looked low; they’ve even looked in between a few places but have come up empty handed. They’ve managed to keep the newly weds from finding out their blunder but the night is quickly coming to an end, and they need your help! The Best Man remembers seeing the bride with the ring when they got to the reception area, so they know it’s somewhere here. Retrace all the steps of the bridal party and put on your deerstalker cap. Piece together the clues to find the missing ring and return it to the new bride before she even notices.</p>
+  <p class="story">What table are you currently sitting at?</p>
   <div id="form">
     <input type="text" id="form_table" name="table">
     <input type="button" value="Submit" onClick="submitTable()">
@@ -126,11 +134,10 @@ function setStageZero() {
   setContent(page);
 }
 
-function setStageOne(code) {
-  var table = getTableFromCookie();
+function setStageOne(table) {
   var page = `
 <div>
-  <p class="story"></p>
+  <p class="story">Bryan, a groomsman, had to place the table numbers on the table when he got to the venue. He found some peculiar letters at your table but didn’t think too much of it.</p>
   <div id="stageOneCode"></div>
   <div id="form">
     <input type="text" id="stageOne" name="answer">
@@ -147,14 +154,27 @@ function setStageOne(code) {
   });
 }
 
-function setStage(table, stage) {
+function setStageTwo() {
+  var page = `
+<div>
+  Picture Cipher here
+</div>
+  `;
+  setContent(page);
+}
+
+function setStage(stage) {
+  var table = getTableFromCookie();
   clearContent();
   setHeader(table);
   if (stage === 0) {
     setStageZero();
   } else if (stage === 1) {
-    setStageOne();
+    setStageOne(table);
+  } else if (stage === 2) {
+    setStageTwo();
   }
+  setFooter(stage);
 }
 
 // Main
@@ -162,10 +182,10 @@ function main() {
   var table = getTableFromCookie();
   if (table) {
     getCurrentStage(table, function (response) {
-      setStage(table, response['stage']);
+      setStage(response['stage']);
     });
   } else {
-    setStage(null, 0);
+    setStage(0);
   }
 }
 
