@@ -88,7 +88,7 @@ function submitTable() {
   var table = document.getElementById("form_table").value;
   getCurrentStage(table, function (response) {
     document.cookie = `table=${table}`;
-    setStage(table, response);
+    setStage(table, response['stage']);
   });
 }
 
@@ -147,10 +147,9 @@ function setStageOne(code) {
   });
 }
 
-function setStage(table, response) {
+function setStage(table, stage) {
   clearContent();
   setHeader(table);
-  var stage = response['stage'];
   if (stage === 0) {
     setStageZero();
   } else if (stage === 1) {
@@ -163,7 +162,7 @@ function main() {
   var table = getTableFromCookie();
   if (table) {
     getCurrentStage(table, function (response) {
-      setStage(table, response);
+      setStage(table, response['stage']);
     });
   } else {
     setStage(null, 0);
