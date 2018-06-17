@@ -4,11 +4,14 @@ from string import ascii_lowercase
 
 app = Flask(__name__)
 
+# Table Number => Stage they are on
 state = {}
-STAGE_ONE_ANSWER = 'diamond'
-STAGE_TWO_ANSWER = 'icecream'
+ANSWERS = [
+  [1, 'diamond'],
+  [2, 'icecream'],
+]
 
-@app.route("/api/table/<number>")
+@app.route("/api/table/<int:number>")
 def table_state(number):
   if number in state:
     level = state[number]
@@ -17,19 +20,14 @@ def table_state(number):
   print "Table %s is at level %s" % (number, level)
   return jsonify({ 'stage': level })
 
-@app.route("/api/stage/<number>")
+@app.route("/api/stage/<int:number>")
 def stage(number):
   response = {'stage': number, 'correct': False, 'message': 'incorrect'}
   answer = request.args.get('answer', '').replace(' ', '')
-  table = request.args.get('table', '')
-  if number == '1':
-    if answer == STAGE_ONE_ANSWER:
-      response = {'stage': 2, 'correct': True}
-  elif number == '2':
-    if answer == STAGE_TWO_ANSWER:
-      response = {'stage': 3, 'correct': True}
-  else:
-    print 'Unknown stage number %s' % number
+  table = int(request.args.get('table', ''))
+  if [number, answer] in ANSWERS:
+    response = {'stage': number + 1, 'correct': True}
+    state[table] = max(state[table], number + 1)
 
   return jsonify(response)
 
