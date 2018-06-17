@@ -22,7 +22,7 @@ def table_state(number):
 @app.route("/api/submit")
 def submit():
   try:
-    answer = request.args.get('answer', '').replace(' ', '')
+    answer = request.args.get('answer', '').replace(' ', '').lower()
     table = int(request.args.get('table', ''))
     stage = int(request.args.get('stage', ''))
   except ValueError:
