@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>The Hunt</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css/thehunt.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div id="header"></div>
+  <div id="toaster"></div>
+  <div id="content"></div>
+  <script src="js/thehunt.js"></script>
+</body>
+</html>
