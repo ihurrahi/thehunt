@@ -37,7 +37,7 @@ function ajax(method, url, callback) {
 
 // Server requests
 function getCurrentStage(table, callback) {
-  var url = URL + "table/" + table
+  var url = URL + "table/" + table;
   ajax("GET", url, callback);
 }
 
@@ -58,6 +58,11 @@ function submit(stage) {
   ajax("GET", url, function (response) {
     
   });
+}
+
+function getStageOneCode(table, callback) {
+  var url = URL + "stageOneCode?table=" + table;
+  ajax("GET", url, callback);
 }
 
 // Helpers
@@ -83,7 +88,7 @@ function submitTable() {
   var table = document.getElementById("form_table").value;
   getCurrentStage(table, function (response) {
     document.cookie = `table=${table}`;
-    setStage(table, response['stage']);
+    setStage(table, response);
   });
 }
 
@@ -91,7 +96,7 @@ function setHeader(table) {
   var header = '';
   if (table) {
     header = `
-  <h2>Playing as Table ${table}</h2>
+  <h3>Welcome Table ${table}</h3>
     `;
   } else {
     header = `
@@ -121,10 +126,12 @@ function setStageZero() {
   setContent(page);
 }
 
-function setStageOne() {
+function setStageOne(code) {
   var table = getTableFromCookie();
   var page = `
 <div>
+  <p class="story"></p>
+  <div id="stageOneCode"></div>
   <div id="form">
     <input type="text" id="stageOne" name="answer">
     <input type="hidden" id="table" value=${table} name="table">
@@ -133,11 +140,17 @@ function setStageOne() {
 </div>
   `;
   setContent(page);
+
+  getStageOneCode(table, function (response) {
+    var element = document.getElementById("stageOneCode");
+    element.innerHTML = response['code'];
+  });
 }
 
-function setStage(table, stage) {
+function setStage(table, response) {
   clearContent();
   setHeader(table);
+  var stage = response['stage'];
   if (stage === 0) {
     setStageZero();
   } else if (stage === 1) {
@@ -150,7 +163,7 @@ function main() {
   var table = getTableFromCookie();
   if (table) {
     getCurrentStage(table, function (response) {
-      setStage(table, response['stage']);
+      setStage(table, response);
     });
   } else {
     setStage(null, 0);
