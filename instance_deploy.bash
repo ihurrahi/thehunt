@@ -1,5 +1,10 @@
 STAGING_DIR=~/website_staging
 
+# sudo apt-get install python-virtualenv | yes
+# TODO: check if thinkingalaud virtualenv installed
+# . thinkingalaud/bin/activate
+# pip install Flask
+
 sudo rm -rf temp-stage
 sudo mkdir temp-stage
 sudo cp -R $STAGING_DIR/* temp-stage
