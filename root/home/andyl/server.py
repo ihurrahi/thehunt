@@ -9,6 +9,7 @@ game_state = {}
 ANSWERS = {
   1: 'diamond',
   2: 'icecream',
+  3: 'chanigetsomelauvtonight',
 }
 
 num_tables = 27
@@ -41,9 +42,11 @@ def table_state(number):
 @app.route("/api/submit", methods=["POST"])
 def submit():
   try:
-    answer = request.args.get('answer', '').replace(' ', '').lower()
     table = int(request.args.get('table', ''))
     stage = int(request.args.get('stage', ''))
+    answer = request.args.get('answer', '').replace(' ', '').lower()
+    if stage == 3:
+      answer = answer.replace('#', '')
   except ValueError:
     return jsonify({'message': 'An error occurred.'}), 404
 

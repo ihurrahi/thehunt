@@ -183,6 +183,16 @@ ${createSubmitForm(table, 2)}
   setContent(page);
 }
 
+function setStageThree(table) {
+  var page = `
+<div>
+  <p class="story">Look under your chair.</p>
+${createSubmitForm(table, 3)}
+</div>
+  `;
+  setContent(page);
+}
+
 function setStage(stage) {
   var table = getTableFromCookie();
   clear();
@@ -193,6 +203,8 @@ function setStage(stage) {
     setStageOne(table);
   } else if (stage === 2) {
     setStageTwo(table);
+  } else if (stage === 3) {
+    setStageThree(table);
   }
   setFooter(stage);
 }
