@@ -13,7 +13,7 @@ function setToaster(value) {
 
 function hideToaster() {
   var toaster = document.getElementById("toaster");
-  toaster.innerHTML = '';
+  toaster.innerHTML = "";
 }
 
 function ajax(method, url, callback) {
@@ -26,8 +26,8 @@ function ajax(method, url, callback) {
       setToaster(result.target.response);
     } else {
       var response = JSON.parse(result.target.response);
-      if (response['message']) {
-        setToaster(response['message']);
+      if (response["message"]) {
+        setToaster(response["message"]);
       }
       callback(response);
     }
@@ -41,8 +41,13 @@ function getCurrentStage(table, callback) {
   ajax("GET", url, callback);
 }
 
-function getNotifications() {
-  return;
+function getNotifications(table) {
+  var url = URL + "notification/" + table;
+  ajax("GET", url, function(response) {
+    if (response["upcoming_table"]) {
+      setToaster("Andy and Melanie are visiting your table soon! Please head back over!");
+    }
+  });
 }
 
 function submit() {
@@ -50,14 +55,14 @@ function submit() {
   var values = [];
   for(var i = 0; i < elements.length; i++){
     var item = elements.item(i);
-    if (item.type !== 'button') {
+    if (item.type !== "button") {
       values.push(item.name + "=" + item.value);
     }
   }
-  var url = URL + "submit" + "?" + values.join('&');
+  var url = URL + "submit" + "?" + values.join("&");
   ajax("POST", url, function (response) {
-    if (response['correct']) {
-      setStage(response['stage']);
+    if (response["correct"]) {
+      setStage(response["stage"]);
     }
   });
 }
@@ -69,10 +74,10 @@ function getStageOneCode(table, callback) {
 
 // Helpers
 function getTableFromCookie() {
-  var cookies = document.cookie.split(';');
+  var cookies = document.cookie.split(";");
   for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i].split('=');
-    if (cookie[0].trim() === 'table') {
+    var cookie = cookies[i].split("=");
+    if (cookie[0].trim() === "table") {
       return parseInt(cookie[1]);
     }
   }
@@ -91,12 +96,12 @@ function submitTable() {
   var table = document.getElementById("form_table").value;
   getCurrentStage(table, function (response) {
     document.cookie = `table=${table}`;
-    setStage(response['stage']);
+    setStage(response["stage"]);
   });
 }
 
 function setHeader(table) {
-  var header = '';
+  var header = "";
   if (table) {
     header = `
   <h3>Welcome Table ${table}</h3>
@@ -158,7 +163,7 @@ ${createSubmitForm(table, 1)}
 
   getStageOneCode(table, function (response) {
     var element = document.getElementById("stageOneCode");
-    element.innerHTML = response['code'];
+    element.innerHTML = response["code"];
   });
 }
 
@@ -212,9 +217,15 @@ function setStage(stage) {
 // Main
 function main() {
   var table = getTableFromCookie();
+
+  // Check for notifications every 30 seconds
+  setInterval(function() {
+    getNotifications(table);
+  }, 30000);
+
   if (table) {
     getCurrentStage(table, function (response) {
-      setStage(response['stage']);
+      setStage(response["stage"]);
     });
   } else {
     setStage(0);

@@ -15,31 +15,30 @@ ANSWERS = {
 num_tables = 27
 visited_state = dict((table, False) for table in range(1, num_tables + 1))
 
-@app.route("/api/admin/visit/<int:table>", methods=["POST"])
+@app.route('/api/admin/visit/<int:table>', methods=['POST'])
 def edit_visit(table):
   visited_state[table] = request.args.get('visit', 'false') == 'true'
   return jsonify()
 
-@app.route("/api/admin/visited")
+@app.route('/api/admin/visited')
 def visited():
   v = sorted(visited_state.items())
   return jsonify(v)
 
-@app.route("/api/admin/state")
+@app.route('/api/admin/state')
 def state():
   s = sorted(game_state.items())
   return jsonify(s)
 
 
-@app.route("/api/table/<int:number>")
-def table_state(number):
-  if number not in game_state:
-    game_state[number] = 1
-  level = game_state[number]
-  print "Table %s is at level %s" % (number, level)
+@app.route('/api/table/<int:table>')
+def table_state(table):
+  if table not in game_state:
+    game_state[table] = 1
+  level = game_state[table]
   return jsonify({ 'stage': level })
 
-@app.route("/api/submit", methods=["POST"])
+@app.route('/api/submit', methods=['POST'])
 def submit():
   try:
     table = int(request.args.get('table', ''))
@@ -57,7 +56,7 @@ def submit():
 
   return jsonify(response)
 
-@app.route("/api/stageOneCode")
+@app.route('/api/stageOneCode')
 def stageOneCode():
   table = int(request.args.get('table', ''))
 
@@ -67,3 +66,11 @@ def stageOneCode():
     code += ascii_lowercase[index]
 
   return jsonify({ 'code': code })
+
+@app.route('/api/notification/<int:table>')
+def notification(table):
+  upcoming_table = False
+  if table - 2 > 0 and visited_state[table - 2] and not visited_state[table]:
+    upcoming_table = True
+  return jsonify({ 'upcoming_table': upcoming_table })
+
