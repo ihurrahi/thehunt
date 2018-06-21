@@ -55,7 +55,7 @@ function submit() {
     }
   }
   var url = URL + "submit" + "?" + values.join('&');
-  ajax("GET", url, function (response) {
+  ajax("POST", url, function (response) {
     if (response['correct']) {
       setStage(response['stage']);
     }

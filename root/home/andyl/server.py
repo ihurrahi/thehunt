@@ -5,21 +5,40 @@ from string import ascii_lowercase
 app = Flask(__name__)
 
 # Table Number => Stage they are on
-state = {}
+game_state = {}
 ANSWERS = {
   1: 'diamond',
   2: 'icecream',
 }
 
+num_tables = 27
+visited_state = dict((table, False) for table in range(1, num_tables + 1))
+
+@app.route("/api/admin/visit/<int:table>", methods=["POST"])
+def edit_visit(table):
+  visited_state[table] = request.args.get('visit', 'false') == 'true'
+  return jsonify()
+
+@app.route("/api/admin/visited")
+def visited():
+  v = sorted(visited_state.items())
+  return jsonify(v)
+
+@app.route("/api/admin/state")
+def state():
+  s = sorted(game_state.items())
+  return jsonify(s)
+
+
 @app.route("/api/table/<int:number>")
 def table_state(number):
-  if number not in state:
-    state[number] = 1
-  level = state[number]
+  if number not in game_state:
+    game_state[number] = 1
+  level = game_state[number]
   print "Table %s is at level %s" % (number, level)
   return jsonify({ 'stage': level })
 
-@app.route("/api/submit")
+@app.route("/api/submit", methods=["POST"])
 def submit():
   try:
     answer = request.args.get('answer', '').replace(' ', '').lower()
@@ -31,7 +50,7 @@ def submit():
   response = {'stage': stage, 'correct': False, 'message': 'incorrect'}
   if stage in ANSWERS and ANSWERS[stage] == answer:
     response = {'stage': stage + 1, 'correct': True}
-    state[table] = max(state[table], stage + 1)
+    game_state[table] = max(game_state[table], stage + 1)
 
   return jsonify(response)
 

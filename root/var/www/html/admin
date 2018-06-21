@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="visited"></div>
+  <div id="state"></div>
+  <script src="js/admin.js"></script>
+</body>
+</html>
