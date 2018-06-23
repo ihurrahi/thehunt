@@ -45,6 +45,7 @@ def table_state(table):
   level = game_state[table]
   return jsonify({ 'stage': level })
 
+# TODO: actually use POST data instead of request args
 @app.route('/api/submit', methods=['POST'])
 def submit():
   try:
