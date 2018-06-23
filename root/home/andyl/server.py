@@ -10,6 +10,13 @@ ANSWERS = {
   1: 'diamond',
   2: 'icecream',
   3: 'chanigetsomelauvtonight',
+  4: '',
+  5: '',
+  6: '',
+  7: '',
+  8: '',
+  9: '',
+  10: '',
 }
 
 num_tables = 27

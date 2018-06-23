@@ -198,6 +198,21 @@ ${createSubmitForm(table, 3)}
   setContent(page);
 }
 
+function setStageFour(table) {
+  var page = `
+<div>
+  <p class="story">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent egestas elit eget ipsum tincidunt faucibus. Vestibulum eu condimentum turpis. Curabitur congue lectus diam, iaculis interdum elit tincidunt quis. Vivamus gravida vulputate suscipit. Nunc porta est tellus, commodo iaculis dolor gravida et. Nunc eget lectus eget augue interdum pharetra. Morbi tincidunt accumsan efficitur. Integer bibendum velit in urna eleifend facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+
+Sed a risus at ante dignissim sodales eu ut neque. Nunc hendrerit laoreet libero nec sagittis. In sit amet orci ut nunc imperdiet ornare sed nec dolor. Nulla quis nisl condimentum sapien placerat molestie ut sit amet arcu. Nunc elementum tortor dignissim, fermentum est quis, consequat felis. Vivamus rhoncus quam non tristique rutrum. In dui est, luctus at efficitur nec, vehicula id erat. Pellentesque commodo magna a tortor laoreet, molestie vulputate arcu volutpat.
+
+Curabitur at turpis velit. Proin tristique ligula sem, eget ornare dolor tristique a. Curabitur accumsan neque justo, ullamcorper convallis dui faucibus sed. Donec metus massa, rutrum non elit vel, dapibus tempus purus. Sed at nisl sem. Suspendisse placerat libero sit amet libero volutpat, id iaculis turpis feugiat. Integer ut purus ac lectus ornare euismod ut sit amet metus. Curabitur in erat rutrum, facilisis nibh ut, maximus nulla. Vestibulum suscipit neque nunc, suscipit tincidunt diam pharetra finibus. Phasellus pharetra leo non nulla rhoncus, eget rhoncus nibh varius. Nulla ultrices feugiat nisl, quis placerat mauris volutpat a. Praesent mollis enim commodo consequat scelerisque. Vivamus vitae velit erat. Nunc faucibus aliquet justo, sed rutrum nunc. Vivamus tortor lacus, pretium ut lacinia sit amet, lacinia et leo. </p>
+${createSubmitForm(table, 4)}
+</div>
+  `;
+  setContent(page);
+}
+
 function setStage(stage) {
   var table = getTableFromCookie();
   clear();
@@ -210,6 +225,8 @@ function setStage(stage) {
     setStageTwo(table);
   } else if (stage === 3) {
     setStageThree(table);
+  } else if (stage === 4) {
+    setStageFour(table);
   }
   setFooter(stage);
 }
