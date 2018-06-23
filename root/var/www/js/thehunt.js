@@ -216,13 +216,15 @@ function setStage(stage) {
 
 // Main
 function main() {
-  var table = getTableFromCookie();
-
   // Check for notifications every 30 seconds
   setInterval(function() {
-    getNotifications(table);
+    var table = getTableFromCookie();
+    if (table) {
+      getNotifications(table);
+    }
   }, 30000);
 
+  var table = getTableFromCookie();
   if (table) {
     getCurrentStage(table, function (response) {
       setStage(response["stage"]);
