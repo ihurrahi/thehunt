@@ -93,7 +93,9 @@ function clear() {
 }
 
 function submitTable() {
-  var table = document.getElementById("form_table").value;
+  var height = getComputedStyle(document.getElementById("table-1")).height;
+  var interval = Math.round(parseFloat(height.substring(0, height.length - 2))); // Removes 'px' from the end
+  var table = Math.round(document.getElementById("scroll-container").scrollTop / interval) + 1;
   getCurrentStage(table, function (response) {
     document.cookie = `table=${table}`;
     setStage(response["stage"]);
@@ -104,7 +106,7 @@ function setHeader(table) {
   var header = "";
   if (table) {
     header = `
-  <h3>Welcome Table ${table}</h3>
+  <h3>Table ${table}</h3>
     `;
   } else {
     header = `
@@ -138,17 +140,51 @@ function createSubmitForm(table, stage) {
 
 // Stages
 function setStageZero() {
+  var tableElements = '';
+  var numTables = 28;
+  for (var i = 1; i < numTables + 1; i++) {
+    var classNames = "scroll-page";
+    if (i == 1) {
+      classNames += " top";
+    }
+    if (i == numTables) {
+      classNames += " bottom";
+    }
+    tableElements += `<div class="${classNames}" id=table-${i}>${i}</div>`;
+  }
+
   var page = `
 <div>
   <p class="story">Oh no! What?!?! How can this be?! The wedding ring is missing! In all of the excitement and chaos, the Bridal party has misplaced the wedding ring and has no idea where it could be. They’ve looked high; they’ve looked low; they’ve even looked in between a few places but have come up empty handed. They’ve managed to keep the newly weds from finding out their blunder but the night is quickly coming to an end, and they need your help! The Maid of Honor remembers seeing the bride with the ring right after the ceremony, so they know it’s somewhere here. Retrace all the steps of the bridal party and put on your deerstalker cap. Piece together the clues to find the missing ring and return it to the new bride before she even notices.</p>
   <p class="story">Which table are you part of?</p>
-  <div id="form">
-    <input type="text" id="form_table" name="table">
+
+  <div id="form_table">
+    <div class="box"></div>
+    <div id="scroll-container">
+      ${tableElements}
+    </div>
     <input type="button" value="Submit" onClick="submitTable()">
   </div>
 </div>
 `;
   setContent(page);
+
+  // snap to table numbers when scrolling
+  var container = document.getElementById("scroll-container");
+  var scrollHandle = null;
+  document.body.lastTableScroll = 0;
+  container.onscroll = function() {
+    var height = getComputedStyle(document.getElementById("table-1")).height;
+    var interval = Math.round(parseFloat(height.substring(0, height.length - 2))); // Removes 'px' from the end
+    var scrolled = container.scrollTop;
+    var round = document.body.lastTableScroll < scrolled ? Math.ceil : Math.floor;
+    var scrollDestination = round(scrolled / interval) * interval;
+    clearTimeout(scrollHandle);
+    scrollHandle = setTimeout(function() {
+      container.scrollTop = scrollDestination;
+      document.body.lastTableScroll = scrollDestination;
+    }, 150);
+  }
 }
 
 function setStageOne(table) {

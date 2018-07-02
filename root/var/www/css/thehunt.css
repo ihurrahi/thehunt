@@ -3,6 +3,14 @@ body {
   max-width: 700px;
 }
 
+
+input[type="button"] {
+  border-radius: 5px;
+  border: 1px solid #468f7f;
+  color: white;
+  background-color: #468f7f;
+}
+
 .hidden {
   color: white;
 }
@@ -44,4 +52,62 @@ body {
   letter-spacing: 0.5em;
   font-size: 2em;
   text-align: center;
+}
+
+/* Table number selector */
+#scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+#scroll-container {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  width: 7em;
+  height: 9em;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.scroll-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3em;
+}
+
+.scroll-page.top {
+  padding-top: 1em;
+}
+
+.scroll-page.bottom {
+  padding-bottom: 1em;
+}
+
+#form_table {
+  position: relative;
+}
+
+#form_table input {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 19em;
+  right: 0;
+  margin: auto;
+  height: 2em;
+}
+
+.box {
+  border: 1px solid;
+  position: absolute;
+  width: 6em;
+  height: 3em;
+  top: 3em;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0.2em;
+  pointer-events: none;
 }

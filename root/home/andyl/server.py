@@ -9,7 +9,7 @@ game_state = {}
 ANSWERS = {
   1: 'diamond',
   2: 'icecream',
-  3: 'chanigetsomelauvtonight',
+  3: 'chanyoufeelthelauvtonight',
   4: '',
   5: '',
   6: '',
