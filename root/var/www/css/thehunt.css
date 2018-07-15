@@ -68,17 +68,17 @@ input[type="button"] {
   padding-left: 0; /* no idea what is giving this element 40px of left padding */
 }
 
-.scroll-page {
+#scroll-container li {
   display: flex;
   justify-content: center;
   font-size: 3em;
 }
 
-.scroll-page.top {
+#scroll-container li.top {
   padding-top: 1em;
 }
 
-.scroll-page.bottom {
+#scroll-container li.bottom {
   padding-bottom: 1em;
 }
 

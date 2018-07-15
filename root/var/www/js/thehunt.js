@@ -145,14 +145,14 @@ function setStageZero() {
   var tableElements = '';
   var numTables = 28;
   for (var i = 1; i < numTables + 1; i++) {
-    var classNames = "scroll-page";
+    var classNames = "";
     if (i == 1) {
-      classNames += " top";
+      classNames = "top";
     }
     if (i == numTables) {
-      classNames += " bottom";
+      classNames = "bottom";
     }
-    tableElements += `<li class="${classNames}" id=table-${i}>${i}</li>`;
+    tableElements += `<li class=${classNames} id=table-${i}>${i}</li>`;
   }
 
   var page = `
