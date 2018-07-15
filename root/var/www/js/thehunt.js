@@ -93,9 +93,11 @@ function clear() {
 }
 
 function submitTable() {
+  // We retrieve the table number based on how far down the container we've scrolled to
   var height = getComputedStyle(document.getElementById("table-1")).height;
-  var interval = Math.round(parseFloat(height.substring(0, height.length - 2))); // Removes 'px' from the end
+  var interval = Math.round(parseFloat(height.replace("px", "")));
   var table = Math.round(document.getElementById("scroll-container").scrollTop / interval) + 1;
+
   getCurrentStage(table, function (response) {
     document.cookie = `table=${table}`;
     setStage(response["stage"]);
@@ -133,7 +135,7 @@ function createSubmitForm(table, stage) {
   <input type="text" id="form_table" name="answer">
   <input type="hidden" value=${table} name="table">
   <input type="hidden" value=${stage} name="stage">
-  <input type="button" value="Submit" onClick="submit()">
+  <input type="button" value="❯" onClick="submit()">
 </div>
   `;
 }
@@ -150,7 +152,7 @@ function setStageZero() {
     if (i == numTables) {
       classNames += " bottom";
     }
-    tableElements += `<div class="${classNames}" id=table-${i}>${i}</div>`;
+    tableElements += `<li class="${classNames}" id=table-${i}>${i}</li>`;
   }
 
   var page = `
@@ -160,31 +162,23 @@ function setStageZero() {
 
   <div id="form_table">
     <div class="box"></div>
-    <div id="scroll-container">
+    <ul id="scroll-container">
       ${tableElements}
-    </div>
-    <input type="button" value="Submit" onClick="submitTable()">
+    </ul>
+    <input type="button" value="❯" onClick="submitTable()">
   </div>
 </div>
 `;
   setContent(page);
 
-  // snap to table numbers when scrolling
-  var container = document.getElementById("scroll-container");
-  var scrollHandle = null;
-  document.body.lastTableScroll = 0;
-  container.onscroll = function() {
-    var height = getComputedStyle(document.getElementById("table-1")).height;
-    var interval = Math.round(parseFloat(height.substring(0, height.length - 2))); // Removes 'px' from the end
-    var scrolled = container.scrollTop;
-    var round = document.body.lastTableScroll < scrolled ? Math.ceil : Math.floor;
-    var scrollDestination = round(scrolled / interval) * interval;
-    clearTimeout(scrollHandle);
-    scrollHandle = setTimeout(function() {
-      container.scrollTop = scrollDestination;
-      document.body.lastTableScroll = scrollDestination;
-    }, 150);
-  }
+  var tableElement = document.getElementById("scroll-container").children[0];
+  var gridHeight = parseInt(getComputedStyle(tableElement).height.replace("px", ""));
+  Draggable.create("#scroll-container", {
+    type: "scroll",
+    liveSnap: function(endValue) {
+      return -Math.round(endValue / gridHeight) * gridHeight;
+    },
+  });
 }
 
 function setStageOne(table) {

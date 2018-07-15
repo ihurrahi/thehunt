@@ -7,8 +7,8 @@ body {
 input[type="button"] {
   border-radius: 5px;
   border: 1px solid #468f7f;
-  color: white;
-  background-color: #468f7f;
+  color: #468f7f;
+  background-color: white;
 }
 
 .hidden {
@@ -65,13 +65,11 @@ input[type="button"] {
   text-align: center;
   width: 7em;
   height: 9em;
-  overflow-y: scroll;
-  scroll-behavior: smooth;
+  padding-left: 0; /* no idea what is giving this element 40px of left padding */
 }
 
 .scroll-page {
   display: flex;
-  align-items: center;
   justify-content: center;
   font-size: 3em;
 }
@@ -92,10 +90,11 @@ input[type="button"] {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 19em;
-  right: 0;
+  left: 75%;
+  right: 10%;
   margin: auto;
   height: 2em;
+  padding: 0 2em 0 2em;
 }
 
 .box {
