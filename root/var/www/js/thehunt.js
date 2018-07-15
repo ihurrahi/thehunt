@@ -152,7 +152,7 @@ function setStageZero() {
     if (i == numTables) {
       classNames = "bottom";
     }
-    tableElements += `<li class=${classNames} id=table-${i}>${i}</li>`;
+    tableElements += `<li id=table-${i} class=${classNames}>${i}</li>`;
   }
 
   var page = `
