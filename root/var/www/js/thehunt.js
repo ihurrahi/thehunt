@@ -1,5 +1,10 @@
 var URL = "http://thinkingalaud.com/api/";
 
+// Cause js modulo is stupid
+function mod(x, n) {
+  return ((x % n) + n) % n;
+}
+
 function setToaster(value) {
   var toaster = document.getElementById("toaster");
   var toast = `
@@ -67,6 +72,25 @@ function submit() {
   });
 }
 
+function submitLock(table, stage) {
+  var value0 = getLockElement(document.getElementById("dial-0")).innerHTML;
+  var value1 = getLockElement(document.getElementById("dial-1")).innerHTML;
+  var value2 = getLockElement(document.getElementById("dial-2")).innerHTML;
+  var value3 = getLockElement(document.getElementById("dial-3")).innerHTML;
+
+  var values = [
+    "answer" + "=" + value0 + value1 + value2 + value3,
+    `table=${table}`,
+    `stage=${stage}`
+  ];
+  var url = URL + "submit" + "?" + values.join("&");
+  ajax("POST", url, function (response) {
+    if (response["correct"]) {
+      setStage(response["stage"]);
+    }
+  });
+}
+
 function getStageOneCode(table, callback) {
   var url = URL + "stageOneCode?table=" + table;
   ajax("GET", url, callback);
@@ -96,7 +120,7 @@ function submitTable() {
   // We retrieve the table number based on how far down the container we've scrolled to
   var height = getComputedStyle(document.getElementById("table-1")).height;
   var interval = Math.round(parseFloat(height.replace("px", "")));
-  var table = Math.round(document.getElementById("scroll-container").scrollTop / interval) + 1;
+  var table = Math.round(document.getElementById("table-selector").scrollTop / interval) + 1;
 
   getCurrentStage(table, function (response) {
     document.cookie = `table=${table}`;
@@ -140,6 +164,42 @@ function createSubmitForm(table, stage) {
   `;
 }
 
+function createLock() {
+  var elements = "";
+  var dials = 4;
+  for (var i = 0; i < dials; i++) {
+    var nums = "";
+    for (var j = 0; j < 10; j++) {
+      var num = (j + 5) % 10;
+      nums += `<li>${num}</li>`;
+    }
+    elements += `
+<ul id=dial-${i} class="scroll-container">
+  ${nums}
+</ul>
+`;
+  }
+  return `
+<div id="lock">
+  ${elements}
+</div>
+`;
+}
+
+function getLockElement(container) {
+  var liChildren = container.getElementsByTagName("li");
+  var gridHeight = parseInt(getComputedStyle(liChildren[0]).height.replace("px", ""));
+  var index = Math.round(container.scrollTop / gridHeight) + 1;
+  return liChildren[index];
+}
+
+function createListElement(num) {
+  var node = document.createElement("li");
+  var text = document.createTextNode(num);
+  node.appendChild(text);
+  return node;
+}
+
 // Stages
 function setStageZero() {
   var tableElements = '';
@@ -162,7 +222,7 @@ function setStageZero() {
 
   <div id="form_table">
     <div class="box"></div>
-    <ul id="scroll-container">
+    <ul class="scroll-container" id="table-selector">
       ${tableElements}
     </ul>
     <input type="button" value="❯" onClick="submitTable()">
@@ -171,9 +231,9 @@ function setStageZero() {
 `;
   setContent(page);
 
-  var tableElement = document.getElementById("scroll-container").children[0];
+  var tableElement = document.getElementById("table-selector").children[0];
   var gridHeight = parseInt(getComputedStyle(tableElement).height.replace("px", ""));
-  Draggable.create("#scroll-container", {
+  Draggable.create("#table-selector", {
     type: "scroll",
     liveSnap: function(endValue) {
       return -Math.round(endValue / gridHeight) * gridHeight;
@@ -253,10 +313,67 @@ ${createSubmitForm(table, 5)}
 function setStageSix(table) {
   var page = `
 <div>
-${createSubmitForm(table, 6)}
+  <div id="lock_form">
+    ${createLock()}
+    <input type="button" value="❯" onClick="submitLock(${table}, 6)">
+  </div>
 </div>
   `;
   setContent(page);
+
+  Draggable.create(".scroll-container", {
+    type: "scroll",
+    liveSnap: function(endValue) {
+      var height = document.getElementsByTagName("li")[0].clientHeight;
+      return -Math.round(endValue / (height / 2)) * (height / 2);
+    },
+    onDragEnd: function() {
+      var height = document.getElementsByTagName("li")[0].clientHeight;
+      var scroll = this.target.scrollTop;
+      var lockEl = getLockElement(this.target);
+      // Always ensure there are 5 elements after the current one
+      var forward = 0;
+      var ptr = lockEl;
+      while (ptr.nextElementSibling) {
+        forward += 1;
+        ptr = ptr.nextElementSibling;
+      }
+      var nextNum = mod(parseInt(ptr.innerHTML) + 1, 10);
+      for (var i = 0; i < 5 - forward; i++) {
+        ptr.parentNode.appendChild(createListElement(mod(nextNum + i, 10)));
+      }
+      // Always ensure there are 5 elements before the current one
+      var backward = 0;
+      var ptr = lockEl;
+      while (ptr.previousElementSibling) {
+        backward += 1;
+        ptr = ptr.previousElementSibling;
+      }
+      var prevNum = mod(parseInt(ptr.innerHTML) - 1, 10);
+      var diff = 0;
+      for (var i = 0; i < 5 - backward; i++) {
+        ptr.parentNode.insertBefore(createListElement(mod(prevNum - i, 10)), ptr.parentNode.firstChild);
+        diff += height;
+      }
+      // TODO: not sure why this causes problems in Chrome when diff is less than 4*height
+      this.target.scrollTop += diff;
+    }
+  });
+
+  // Not sure why this happens, but clientHeight doesn't get set to the right
+  // value until some time later. My guess is that the styles don't get applied
+  // immediately, and the font for the lock numbers is slightly larger so the
+  // height changes later on. We want to use that later height value for setting
+  // the initial scroll location.
+  setTimeout(function() {
+    // Center scroll in the middle
+    var height = document.getElementsByTagName("li")[0].clientHeight;
+    console.log(height);
+    var dials = document.getElementsByClassName("scroll-container");
+    for (var i = 0; i < dials.length; i++) {
+      dials[i].scrollTop = height * 4;
+    }
+  }, 500);
 }
 
 function setStage(stage) {

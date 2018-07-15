@@ -55,30 +55,30 @@ input[type="button"] {
 }
 
 /* Table number selector */
-#scroll-container::-webkit-scrollbar {
+.scroll-container::-webkit-scrollbar {
   display: none;
 }
 
-#scroll-container {
+.scroll-container {
   display: block;
   margin: 0 auto;
   text-align: center;
   width: 7em;
-  height: 9em;
+  height: 14em;
   padding-left: 0; /* no idea what is giving this element 40px of left padding */
 }
 
-#scroll-container li {
+.scroll-container li {
   display: flex;
   justify-content: center;
   font-size: 3em;
 }
 
-#scroll-container li.top {
+.scroll-container li.top {
   padding-top: 1em;
 }
 
-#scroll-container li.bottom {
+.scroll-container li.bottom {
   padding-bottom: 1em;
 }
 
@@ -109,4 +109,34 @@ input[type="button"] {
   margin-right: auto;
   border-radius: 0.2em;
   pointer-events: none;
+}
+
+#lock_form {
+  position: relative;
+}
+
+#lock_form input {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 75%;
+  right: 10%;
+  margin: auto;
+  height: 3em;
+}
+
+#lock {
+  display: flex;
+  margin: auto;
+  width: 13em;
+  font-family: 'Saira';
+  font-size: 1em;
+}
+
+#lock ul {
+  background: linear-gradient(to bottom, #8c9093 0%,#b6babd 9%,#ccd2d6 18%,#ffffff 55%,#ccd2d6 82%,#b6babd 91%,#8c9093 100%);
+}
+
+#lock li {
+  box-shadow: inset 0px -7px 10px gray;
 }
