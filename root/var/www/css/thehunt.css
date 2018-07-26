@@ -79,7 +79,7 @@ input[type="button"] {
 }
 
 .scroll-container li.bottom {
-  padding-bottom: 1em;
+  padding-bottom: 3em;
 }
 
 #form_table {
@@ -89,7 +89,7 @@ input[type="button"] {
 #form_table input {
   position: absolute;
   top: 0;
-  bottom: 0;
+  bottom: 33%;
   left: 75%;
   right: 10%;
   margin: auto;
@@ -113,14 +113,19 @@ input[type="button"] {
 
 #lock_form {
   position: relative;
+  background-image: url('/images/thehunt/lock.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 35em;
 }
 
 #lock_form input {
   position: absolute;
-  top: 0;
+  top: 45%;
   bottom: 0;
-  left: 75%;
-  right: 10%;
+  left: 80%;
+  right: 5%;
   margin: auto;
   height: 3em;
 }
@@ -128,15 +133,17 @@ input[type="button"] {
 #lock {
   display: flex;
   margin: auto;
-  width: 13em;
+  width: 16em;
   font-family: 'Saira';
-  font-size: 1em;
+  padding-top: 18em;
 }
 
 #lock ul {
   background: linear-gradient(to bottom, #8c9093 0%,#b6babd 9%,#ccd2d6 18%,#ffffff 55%,#ccd2d6 82%,#b6babd 91%,#8c9093 100%);
+  border-radius: 5px;
+  margin-right: 1em;
 }
 
 #lock li {
-  box-shadow: inset 0px -7px 10px gray;
+  box-shadow: inset -4px -7px 3px gray, inset 4px 7px 4px white;
 }

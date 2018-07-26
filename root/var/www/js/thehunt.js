@@ -4,7 +4,6 @@ var URL = "http://thinkingalaud.com/api/";
 function mod(x, n) {
   return ((x % n) + n) % n;
 }
-
 function setToaster(value) {
   var toaster = document.getElementById("toaster");
   var toast = `
@@ -73,20 +72,26 @@ function submit() {
 }
 
 function submitLock(table, stage) {
-  var value0 = getLockElement(document.getElementById("dial-0")).innerHTML;
-  var value1 = getLockElement(document.getElementById("dial-1")).innerHTML;
-  var value2 = getLockElement(document.getElementById("dial-2")).innerHTML;
-  var value3 = getLockElement(document.getElementById("dial-3")).innerHTML;
+  var dials = [
+    document.getElementById("dial-0"),
+    document.getElementById("dial-1"),
+    document.getElementById("dial-2"),
+    document.getElementById("dial-3"),
+  ]
+  var answer = '';
+  for (var i = 0; i < dials.length; i++) {
+    answer += getLockElement(dials[i]).innerHTML;
+  }
 
-  var values = [
-    "answer" + "=" + value0 + value1 + value2 + value3,
-    `table=${table}`,
-    `stage=${stage}`
-  ];
+  var values = [`answer=${answer}`, `table=${table}`, `stage=${stage}`];
   var url = URL + "submit" + "?" + values.join("&");
   ajax("POST", url, function (response) {
     if (response["correct"]) {
       setStage(response["stage"]);
+    } else {
+      for (var i = 0; i < dials.length; i++) {
+        resetLock(dials[i]);
+      }
     }
   });
 }
@@ -188,9 +193,23 @@ function createLock() {
 
 function getLockElement(container) {
   var liChildren = container.getElementsByTagName("li");
-  var gridHeight = parseInt(getComputedStyle(liChildren[0]).height.replace("px", ""));
+  var gridHeight = liChildren[0].clientHeight;
   var index = Math.round(container.scrollTop / gridHeight) + 1;
   return liChildren[index];
+}
+
+function resetLock(container) {
+  var liChildren = container.getElementsByTagName("li");
+  var gridHeight = liChildren[0].clientHeight;
+  // Start at 1 in off chance that the first element is
+  // what we need to reset to - we need at least 1 number
+  // on top so the 0 is centered when we scroll to it
+  for (var i = 1; i < liChildren.length; i++) {
+    if (liChildren[i].innerHTML === '0') {
+      break;
+    }
+  }
+  container.scrollTop = (i - 1) * gridHeight;
 }
 
 function createListElement(num) {
@@ -367,11 +386,9 @@ function setStageSix(table) {
   // the initial scroll location.
   setTimeout(function() {
     // Center scroll in the middle
-    var height = document.getElementsByTagName("li")[0].clientHeight;
-    console.log(height);
     var dials = document.getElementsByClassName("scroll-container");
     for (var i = 0; i < dials.length; i++) {
-      dials[i].scrollTop = height * 4;
+      resetLock(dials[i]);
     }
   }, 500);
 }
