@@ -147,3 +147,19 @@ input[type="button"] {
 #lock li {
   box-shadow: inset -4px -7px 3px gray, inset 4px 7px 4px white;
 }
+
+#file-preview {
+  visibility: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1em;
+}
+
+#file-upload-progress {
+  visibility: hidden;
+}
+
+.file-submit-container {
+  display: flex;
+  padding: 1em;
+}

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from flask import Flask, jsonify, request
 from string import ascii_lowercase
+from uuid import uuid4
 
 app = Flask(__name__)
 
@@ -12,8 +13,8 @@ ANSWERS = {
   3: 'chanyoufeelthelauvtonight',
   4: '',
   5: '',
-  6: '',
-  7: '',
+  6: '0000',
+  7: 'file_uploaded',
   8: '',
   9: '',
   10: '',
@@ -54,6 +55,11 @@ def submit():
     answer = request.args.get('answer', '').replace(' ', '').lower()
     if stage == 3:
       answer = answer.replace('#', '')
+    if stage == 7:
+      fname = "table" + str(table) + "_" + str(uuid4())
+      with open(fname, "wb") as f:
+        f.write(request.files.get('file').read())
+      answer = 'file_uploaded'
   except ValueError:
     return jsonify({'message': 'An error occurred.'}), 404
 

@@ -20,7 +20,7 @@ function hideToaster() {
   toaster.innerHTML = "";
 }
 
-function ajax(method, url, callback) {
+function _ajax(method, url, callback) {
   console.log(url);
   var xhttp = new XMLHttpRequest();
   xhttp.open(method, url, true);
@@ -28,7 +28,9 @@ function ajax(method, url, callback) {
     console.log(result.target.response);
     if (this.status === 404) {
       setToaster(result.target.response);
-    } else {
+    } else if (this.status === 413) {
+      setToaster('File too large.')
+    }else {
       var response = JSON.parse(result.target.response);
       if (response["message"]) {
         setToaster(response["message"]);
@@ -36,7 +38,12 @@ function ajax(method, url, callback) {
       callback(response);
     }
   });
-  xhttp.send();
+  return xhttp;
+}
+
+function ajax(method, url, callback) {
+  var req = _ajax(method, url, callback);
+  req.send();
 }
 
 // Server requests
@@ -393,6 +400,56 @@ function setStageSix(table) {
   }, 500);
 }
 
+function setStageSeven(table) {
+  var page = `
+<div>
+  <form id="file-upload-form">
+    <input type="file" id="file-upload" name="file" accept="image/*;capture=camera">
+    <img id="file-preview" src="#">
+    <div class="file-submit-container">
+      <input type="button" id="file-upload-submit" value="Submit">
+      <div id="file-upload-progress"></div>
+    <div>
+  </form>
+</div>
+  `;
+  setContent(page);
+
+  var uploader = document.getElementById("file-upload");
+  uploader.onchange = function() {
+    if (this.files && this.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var preview = document.getElementById("file-preview");
+        preview.setAttribute("src", e.target.result);
+        preview.style.visibility = "visible";
+      }
+      reader.readAsDataURL(this.files[0]);
+    }
+  };
+
+  var submitButton = document.getElementById("file-upload-submit");
+  submitButton.onclick = function() {
+    var values = [`table=${table}`, "stage=7"];
+    var url = URL + "submit" + "?" + values.join("&");
+    var req = _ajax("POST", url, function (response) {
+      if (response["correct"]) {
+        setStage(response["stage"]);
+      }
+    });
+    req.upload.addEventListener("progress", function (e) {
+      var percent = (e.loaded / e.total) * 100;
+      var progress = document.getElementById("file-upload-progress");
+      progress.style.visibility = 'visible';
+      progress.innerHTML = Math.round(percent) + "%";
+    }, false);
+
+    var form = document.getElementById("file-upload-form");
+    var uploaderForm = new FormData(form);
+    req.send(uploaderForm);
+  }
+}  
+
 function setStage(stage) {
   var table = getTableFromCookie();
   clear();
@@ -411,6 +468,8 @@ function setStage(stage) {
     setStageFive(table);
   } else if (stage === 6) {
     setStageSix(table);
+  } else if (stage === 7) {
+    setStageSeven(table);
   }
 
   setFooter(stage);
