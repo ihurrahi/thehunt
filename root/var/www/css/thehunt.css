@@ -82,11 +82,11 @@ input[type="button"] {
   padding-bottom: 3em;
 }
 
-#form_table {
+#form-table {
   position: relative;
 }
 
-#form_table input {
+#form-table input {
   position: absolute;
   top: 0;
   bottom: 33%;
@@ -111,7 +111,7 @@ input[type="button"] {
   pointer-events: none;
 }
 
-#lock_form {
+#lock-form {
   position: relative;
   background-image: url('/images/thehunt/lock.png');
   background-size: contain;
@@ -120,7 +120,7 @@ input[type="button"] {
   height: 35em;
 }
 
-#lock_form input {
+#lock-form input {
   position: absolute;
   top: 45%;
   bottom: 0;
@@ -162,4 +162,86 @@ input[type="button"] {
 .file-submit-container {
   display: flex;
   padding: 1em;
+}
+
+#grid {
+  position: relative;
+  display: grid;
+  /* has to match the size of the grid */
+  grid-template-columns: repeat(13, 2em);
+  grid-template-rows: repeat(32, 2em);
+  grid-row-gap: 0;
+  grid-column-gap: 0;
+}
+
+#inner-grid {
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
+  right: 0.5em;
+  bottom: 0.5em;
+}
+
+.grid-line {
+  width: 2em;
+  height: 2em;
+  display: inline-block;
+}
+
+.grid-line.middle {
+  border: 1px solid #F5F5F5;
+}
+
+.grid-line.top, .grid-line.bottom {
+  border-left: 1px solid #F5F5F5;
+  border-right: 1px solid #F5F5F5;
+}
+
+.grid-line.left, .grid-line.right {
+  border-top: 1px solid #F5F5F5;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.grid-line.top {
+  border-top: 1px solid white;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.grid-line.bottom {
+  border-bottom: 1px solid white;
+  border-top: 1px solid #F5F5F5;
+}
+
+.grid-line.left {
+  border-left: 1px solid white;
+  border-right: 1px solid #F5F5F5;
+}
+
+.grid-line.right {
+  border-right: 1px solid white;
+  border-left: 1px solid #F5F5F5;
+}
+
+.bubble {
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
+  border-radius: 50%;
+  text-align: center;
+  /* width should be height + line-height */
+  width: 3em;
+  height: 2em;
+  /* line-height and padding-top should be the same */
+  line-height: 1em;
+  padding-top: 1em;
+}
+
+.bubble.green {
+  background-color: green;
+  color: white;
+}
+
+.bubble.pink {
+  background-color: pink;
+  color: white;
 }

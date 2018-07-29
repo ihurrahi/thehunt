@@ -168,7 +168,7 @@ function setFooter(stage) {
 function createSubmitForm(table, stage) {
   return `
 <div id="form">
-  <input type="text" id="form_table" name="answer">
+  <input type="text" id="form-table" name="answer">
   <input type="hidden" value=${table} name="table">
   <input type="hidden" value=${stage} name="stage">
   <input type="button" value="❯" onClick="submit()">
@@ -246,7 +246,7 @@ function setStageZero() {
   <p class="story">Oh no! What?!?! How can this be?! The wedding ring is missing! In all of the excitement and chaos, the Bridal party has misplaced the wedding ring and has no idea where it could be. They’ve looked high; they’ve looked low; they’ve even looked in between a few places but have come up empty handed. They’ve managed to keep the newly weds from finding out their blunder but the night is quickly coming to an end, and they need your help! The Maid of Honor remembers seeing the bride with the ring right after the ceremony, so they know it’s somewhere here. Retrace all the steps of the bridal party and put on your deerstalker cap. Piece together the clues to find the missing ring and return it to the new bride before she even notices.</p>
   <p class="story">Which table are you part of?</p>
 
-  <div id="form_table">
+  <div id="form-table">
     <div class="box"></div>
     <ul class="scroll-container" id="table-selector">
       ${tableElements}
@@ -339,7 +339,7 @@ ${createSubmitForm(table, 5)}
 function setStageSix(table) {
   var page = `
 <div>
-  <div id="lock_form">
+  <div id="lock-form">
     ${createLock()}
     <input type="button" value="❯" onClick="submitLock(${table}, 6)">
   </div>
@@ -448,7 +448,118 @@ function setStageSeven(table) {
     var uploaderForm = new FormData(form);
     req.send(uploaderForm);
   }
-}  
+}
+
+function setStageEight(table) {
+  var page = `
+<div>
+  <div id="grid">
+    <div id="inner-grid">
+    </div>
+  </div>
+</div>
+  `;
+  setContent(page);
+
+  var gridX = 12;
+  var gridY = 31;
+  // TODO: how do we use 2em instead of pixel values?
+  var elementSize = 32; // 2em
+  // TODO: this is bad - the answers are available client side
+  var bubbles = {
+    "bubble-sam": {display: "SM", className: "bubble green", answer: [4, 11], start: [11, 10] },
+    "bubble-sheldon": {display: "SC", className: "bubble green", answer: [1, 1], start: [6, 29] },
+    "bubble-matt": {display: "MC", className: "bubble green", answer: [1, 1], start: [11, 17] },
+    "bubble-bryan": {display: "BL", className: "bubble green", answer: [1, 1], start: [2, 20] },
+    "bubble-meaghan": {display: "MY", className: "bubble pink", answer: [1, 1], start: [1, 1] },
+    "bubble-anna": {display: "AS", className: "bubble pink", answer: [1, 1], start: [6, 25] },
+    "bubble-lillian": {display: "LW", className: "bubble pink", answer: [1, 1], start: [7, 19] },
+    "bubble-shay": {display: "SP", className: "bubble pink", answer: [1, 1], start: [3, 2] },
+  };
+
+  var grid = document.getElementById("grid");
+  grid.style.width = `calc(${elementSize}px * (${gridX} + 1))`;
+  grid.style.height = `calc(${elementSize}px * (${gridY} + 1))`;
+  // Create grid pattern
+  for (var i = 0; i < gridY + 1; i++) {
+    for (var j = 0; j < gridX + 1; j++) {
+      var div = document.createElement("div");
+      var classNames = [];
+      if (i == 0) {
+        classNames.push("top");
+      }
+      if (i == gridY) {
+        classNames.push("bottom");
+      }
+      if (j == 0) {
+        classNames.push("left");
+      }
+      if (j == gridX) {
+        classNames.push("right");
+      }
+      if (classNames.length == 0) {
+        classNames.push("middle");
+      }
+      classNames.splice(0, 0, "grid-line");
+      div.className = classNames.join(" ");
+      grid.appendChild(div);
+    }
+  }
+
+  // Actually create bubble elements
+  Object.keys(bubbles).forEach(function (id) {
+    var bubble = bubbles[id];
+    var bubbleElement = document.createElement("div");
+    bubbleElement.className = bubble.className;
+    bubbleElement.innerHTML = bubble.display;
+    bubbleElement.id = id;
+    grid.appendChild(bubbleElement);
+  });
+
+  var draggables = Draggable.create(".bubble", {
+    type: "x,y",
+    edgeResistance: 0.65,
+    bounds: "#grid",
+    liveSnap: true,
+    snap: {
+      x: function(endValue) {
+        return Math.round(endValue / elementSize) * elementSize;
+      },
+      y: function(endValue) {
+        return Math.round(endValue / elementSize) * elementSize;
+      }
+    },
+    onDragEnd: function() {
+      // innerGrid has the real bounds for the bubbles, grid has the bounds for the grid pattern
+      grid = document.getElementById("inner-grid");
+      this.applyBounds(grid);
+
+      correct = true;
+      for (var i = 0; i < draggables.length; i++) {
+        var draggable = draggables[i];
+        var answer = bubbles[draggable.target.id].answer;
+        var loc = [draggable.x / elementSize, draggable.y / elementSize];
+        if (loc[0] != answer[0] || loc[1] != answer[1]) {
+          correct = false;
+        }
+      }
+      if (correct) {
+        // TODO: move onto the next stage
+        setToaster("Correct!");
+      } else {
+        setToaster([this.x / elementSize, this.y / elementSize]);
+      }
+    }
+  });
+
+  // move bubbles to their starting positions
+  for (var i = 0; i < draggables.length; i++) {
+    var draggable = draggables[i];
+    var start = bubbles[draggable.target.id].start;
+    TweenLite.set(draggable.target, { x: start[0] * elementSize, y: start[1] * elementSize });
+    draggable.update();
+  }
+}
 
 function setStage(stage) {
   var table = getTableFromCookie();
@@ -470,6 +581,8 @@ function setStage(stage) {
     setStageSix(table);
   } else if (stage === 7) {
     setStageSeven(table);
+  } else if (stage === 8) {
+    setStageEight(table);
   }
 
   setFooter(stage);
