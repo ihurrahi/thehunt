@@ -31,6 +31,38 @@ input[type="button"] {
   padding-left: 1em;
 }
 
+#footer {
+  position: relative;
+}
+
+#hint {
+  display: none;
+  background: url('/images/thehunt/light_bulb.png') 50% 50% no-repeat;
+  background-size: 100%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  float: right;
+}
+
+.hint-modal {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  overflow: auto;
+  right: 0;
+  bottom: -0.5em;
+}
+
+.hint-modal-content {
+  background-color: #fefefe;
+  margin: 1em;
+  padding: 1em;
+  border: 1px solid #000000;
+  border-radius: 7px;
+  max-width: 10em;
+}
+
 #form {
   margin-top: 1em;
   text-align: center;

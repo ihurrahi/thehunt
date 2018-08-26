@@ -4,6 +4,8 @@ var URL = "http://thinkingalaud.com/api/";
 function mod(x, n) {
   return ((x % n) + n) % n;
 }
+
+
 function setToaster(value) {
   var toaster = document.getElementById("toaster");
   var toast = `
@@ -120,6 +122,7 @@ function clear() {
     content.removeChild(content.firstChild);
   }
   hideToaster();
+  hideHint();
 }
 
 function submitTable() {
@@ -154,9 +157,32 @@ function setContent(content) {
   contentElement.innerHTML = content;
 }
 
-function setFooter(stage) {
-  var footerElement = document.getElementById("footer");
-  footerElement.innerHTML = stage;
+function setHiddenStage(stage) {
+  var element = document.getElementById("hiddenStage");
+  element.innerHTML = stage;
+}
+
+function setHint(hint) {
+  var element = document.getElementById("hint");
+  element.style.display = "block";
+  var hintModal = document.getElementById("hintModal");
+  var content = document.getElementById("hintModalContent");
+  element.onclick = function() {
+    hintModal.style.display = "block";
+  }
+  // When the user clicks anywhere outside of the modal, close it
+  document.onclick = function(event) {
+    if (event.target !== hintModal && event.target !== element) {
+      hintModal.style.display = "none";
+    }
+  }
+
+  content.innerHTML = hint;
+}
+
+function hideHint() {
+  var element = document.getElementById("hint");
+  element.style.display = "none";
 }
 
 function createSubmitForm(stage) {
@@ -270,6 +296,7 @@ ${createSubmitForm(1)}
 </div>
   `;
   setContent(page);
+  setHint("these letters were only found at your table!");
 
   getStageOneCode(function (response) {
     var element = document.getElementById("stageOneCode");
@@ -296,6 +323,7 @@ ${createSubmitForm(2)}
 </div>
   `;
   setContent(page);
+  setHint("here -> French ?");
 }
 
 function setStageThree() {
@@ -315,6 +343,7 @@ ${createSubmitForm(3)}
 </div>
   `;
   setContent(page);
+  setHint("every other");
 }
 
 function setStageFour() {
@@ -336,6 +365,7 @@ ${createSubmitForm(4)}
 </div>
   `;
   setContent(page);
+  setHint("you're not allowed to look back in time, but maybe a friend at your table can help you!");
 }
 
 function setStageFive() {
@@ -346,6 +376,7 @@ ${createSubmitForm(5)}
 </div>
   `;
   setContent(page);
+  setHint("/andyplusmelanie/qa");
 }
 
 function setStageSix() {
@@ -364,6 +395,7 @@ function setStageSix() {
 </div>
   `;
   setContent(page);
+  setHint("find me!")
 
   Draggable.create(".scroll-container", {
     type: "scroll",
@@ -478,6 +510,7 @@ ${createSubmitForm(8)}
 </div>
   `;
   setContent(page);
+  setHint("memory station");
 }
 
 function setStageNine() {
@@ -490,6 +523,7 @@ function setStageNine() {
 </div>
   `;
   setContent(page);
+  setHint("🎈🎂🎁");
 
   var gridX = 12;
   var gridY = 31;
@@ -639,7 +673,7 @@ function setStage(stage) {
     setStageEleven();
   }
 
-  setFooter(stage);
+  setHiddenStage(stage);
 }
 
 // Main

@@ -13,7 +13,13 @@
   <div id="header"></div>
   <div id="toaster"></div>
   <div id="content"></div>
-  <div id="footer" class="hidden"></div>
+  <div id="footer">
+    <div id="hiddenStage" class="hidden"></div>
+    <div id="hint"></div>
+    <div id="hintModal" class="hint-modal">
+      <div id="hintModalContent" class="hint-modal-content"></div>
+    </div>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenLite.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/utils/Draggable.min.js"></script>
