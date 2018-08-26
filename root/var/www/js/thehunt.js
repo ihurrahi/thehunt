@@ -29,7 +29,7 @@ function _ajax(method, url, callback) {
     if (this.status === 404) {
       setToaster(result.target.response);
     } else if (this.status === 413) {
-      setToaster('File too large.')
+      setToaster("File too large.")
     } else {
       var response = JSON.parse(result.target.response);
       if (response["message"]) {
@@ -90,7 +90,7 @@ function submitLock(stage) {
     document.getElementById("dial-2"),
     document.getElementById("dial-3"),
   ]
-  var answer = '';
+  var answer = "";
   for (var i = 0; i < dials.length; i++) {
     answer += getLockElement(dials[i]).innerHTML;
   }
@@ -205,7 +205,7 @@ function resetLock(container) {
   // what we need to reset to - we need at least 1 number
   // on top so the 0 is centered when we scroll to it
   for (var i = 1; i < liChildren.length; i++) {
-    if (liChildren[i].innerHTML === '0') {
+    if (liChildren[i].innerHTML === "0") {
       break;
     }
   }
@@ -222,7 +222,7 @@ function createListElement(num) {
 // Stages
 function setStageZero() {
   setHeader(0);
-  var tableElements = '';
+  var tableElements = "";
   var numTables = 28;
   for (var i = 1; i < numTables + 1; i++) {
     var classNames = "";
@@ -237,7 +237,7 @@ function setStageZero() {
 
   var page = `
 <div>
-  <p class="story">Oh no! What?!?! How can this be?! The wedding ring is missing! In all of the excitement and chaos, the Bridal party has misplaced the wedding ring and has no idea where it could be. They’ve looked high; they’ve looked low; they’ve even looked in between a few places but have come up empty handed. They’ve managed to keep the newly weds from finding out their blunder but the night is quickly coming to an end, and they need your help! The Maid of Honor remembers seeing the bride with the ring right after the ceremony, so they know it’s somewhere here. Retrace all the steps of the bridal party and put on your deerstalker cap. Piece together the clues to find the missing ring and return it to the new bride before she even notices.</p>
+  <p class="story">Oh no! What?!?! How can this be?! The wedding ring is missing! In all of the excitement and chaos, the Bridal party has misplaced the wedding ring and has no idea where it could be. They’ve looked high; they’ve looked low; they’ve even looked in between a few places but have come up empty handed. They’ve managed to keep the newly weds from finding out their blunder but the night is quickly coming to an end, and they need your help! A member of the bridal party remembers seeing the bride with the ring right after the ceremony, so they know it’s somewhere here. Retrace all the steps of the bridal party and put on your deerstalker cap. Piece together the clues to find the missing ring and return it to the new bride before she even notices.</p>
   <p class="story">Which table are you part of?</p>
 
   <div id="form-table">
@@ -265,7 +265,7 @@ function setStageOne() {
   var page = `
 <div>
   <p class="story">Bryan, a groomsman, had to place the table numbers on the table when he got to the venue. He found some peculiar letters at your table but didn’t think too much of it.</p>
-  <div id="stageOneCode"></div>
+  <div class="code" id="stageOneCode"></div>
 ${createSubmitForm(1)}
 </div>
   `;
@@ -301,7 +301,16 @@ ${createSubmitForm(2)}
 function setStageThree() {
   var page = `
 <div>
-  <p class="story">Look under your chair.</p>
+  <p class="story">Matt, usually calm and collected, can&apos;t believe this is happening. He is stressed out and running all over the place flipping everything inside and out, over and under, sideways and around. He is usually pretty good at seeing the trees within the forest.</p>
+  <div class="code">
+    <p>T L M O B O C</p>
+    <p>K O U A N X D</p>
+    <p>U E L R T N U</p>
+    <p>E Q A A T T H</p>
+    <p>L T M H U E F</p>
+    <p>T F A E B S L</p>
+    <p>T E A T B S L</p>
+  </div>
 ${createSubmitForm(3)}
 </div>
   `;
@@ -311,10 +320,18 @@ ${createSubmitForm(3)}
 function setStageFour() {
   var page = `
 <div>
-  <p class="story">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent egestas elit eget ipsum tincidunt faucibus. Vestibulum eu condimentum turpis. Curabitur congue lectus diam, iaculis interdum elit tincidunt quis. Vivamus gravida vulputate suscipit. Nunc porta est tellus, commodo iaculis dolor gravida et. Nunc eget lectus eget augue interdum pharetra. Morbi tincidunt accumsan efficitur. Integer bibendum velit in urna eleifend facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
-  <p class="story">Sed a risus at ante dignissim sodales eu ut neque. Nunc hendrerit laoreet libero nec sagittis. In sit amet orci ut nunc imperdiet ornare sed nec dolor. Nulla quis nisl condimentum sapien placerat molestie ut sit amet arcu. Nunc elementum tortor dignissim, fermentum est quis, consequat felis. Vivamus rhoncus quam non tristique rutrum. In dui est, luctus at efficitur nec, vehicula id erat. Pellentesque commodo magna a tortor laoreet, molestie vulputate arcu volutpat.</p>
-  <p class="story">Curabitur at turpis velit. Proin tristique ligula sem, eget ornare dolor tristique a. Curabitur accumsan neque justo, ullamcorper convallis dui faucibus sed. Donec metus massa, rutrum non elit vel, dapibus tempus purus. Sed at nisl sem. Suspendisse placerat libero sit amet libero volutpat, id iaculis turpis feugiat. Integer ut purus ac lectus ornare euismod ut sit amet metus. Curabitur in erat rutrum, facilisis nibh ut, maximus nulla. Vestibulum suscipit neque nunc, suscipit tincidunt diam pharetra finibus. Phasellus pharetra leo non nulla rhoncus, eget rhoncus nibh varius. Nulla ultrices feugiat nisl, quis placerat mauris volutpat a. Praesent mollis enim commodo consequat scelerisque. Vivamus vitae velit erat. Nunc faucibus aliquet justo, sed rutrum nunc. Vivamus tortor lacus, pretium ut lacinia sit amet, lacinia et leo.</p>
+  <p class="story">Alone... only forward can you see.</p>
+  <p class="story">But with a friend, the past becomes clear.</p>
+  <div class="code">
+    <pre>        X    </pre>
+    <pre>  X          </pre>
+    <pre>            X</pre>
+    <pre>  X          </pre>
+    <pre>        X    </pre>
+    <pre>      X      </pre>
+    <pre>      X      </pre>
+  </div>
+
 ${createSubmitForm(4)}
 </div>
   `;
@@ -324,6 +341,7 @@ ${createSubmitForm(4)}
 function setStageFive() {
   var page = `
 <div>
+  <p class="story">Anna is dumbfounded. She usually always has an answer. If only there was a place to get all our questions answered...</p>
 ${createSubmitForm(5)}
 </div>
   `;
@@ -336,6 +354,12 @@ function setStageSix() {
   <div id="lock-form">
     ${createLock()}
     <input type="button" value="❯" onClick="submitLock(6)">
+  </div>
+  <div class="lock-hint">
+    <div>🔥</div>
+    <div>🛋️</div>
+    <div>🗑️</div>
+    <div>📦</div>
   </div>
 </div>
   `;
@@ -397,6 +421,8 @@ function setStageSix() {
 function setStageSeven() {
   var page = `
 <div>
+  <p class="story">What are we going to say to Melanie about the ring? No, it&apos;s too early to start thinking of apologies. We can&apos;t give up yet. There has to be some place we haven&apos;t checked yet.</p>
+  <p class="story">Shay and Lillian got some goofy pictures in at the photobooth. Maybe the ring got mixed in with all of the props.</p>
   <form id="file-upload-form">
     <input type="file" id="file-upload" name="file" accept="image/*;capture=camera">
     <img id="file-preview" src="#">
@@ -434,7 +460,7 @@ function setStageSeven() {
     req.upload.addEventListener("progress", function (e) {
       var percent = (e.loaded / e.total) * 100;
       var progress = document.getElementById("file-upload-progress");
-      progress.style.visibility = 'visible';
+      progress.style.visibility = "visible";
       progress.innerHTML = Math.round(percent) + "%";
     }, false);
 
@@ -445,6 +471,16 @@ function setStageSeven() {
 }
 
 function setStageEight() {
+  var page = `
+<div>
+  <p class="story">Sheldon, oddly stoic, can&apos;t remember that there are any rings at all. Where and when would he see rings, he wonders. He thinks long and hard; trying to flip through his memories like a Sherlock mind palace but he doesn&apos;t remember. He only remembers how terrible his memory is.</p>
+${createSubmitForm(8)}
+</div>
+  `;
+  setContent(page);
+}
+
+function setStageNine() {
   var page = `
 <div>
   <div id="grid">
@@ -555,6 +591,26 @@ function setStageEight() {
   }
 }
 
+function setStageTen() {
+   var page = `
+<div>
+  <p class="story"></p>
+${createSubmitForm(10)}
+</div>
+  `;
+  setContent(page);
+}
+
+function setStageEleven() {
+  var page = `
+<div>
+  <p class="story">You did it! You found the ring!</p>
+  <p class="story">Show this page to Andy and Melanie to take a special picture with them!</p>
+</div>
+  `;
+  setContent(page);
+}
+
 function setStage(stage) {
   clear();
   if (stage === 0) {
@@ -575,6 +631,12 @@ function setStage(stage) {
     setStageSeven();
   } else if (stage === 8) {
     setStageEight();
+  } else if (stage === 9) {
+    setStageNine();
+  } else if (stage === 10) {
+    setStageTen();
+  } else if (stage === 11) {
+    setStageEleven();
   }
 
   setFooter(stage);

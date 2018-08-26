@@ -13,7 +13,7 @@ ANSWERS = {
   1: 'diamond',
   2: 'icecream',
   3: 'chanyoufeelthelauvtonight',
-  4: '',
+  4: 'bouquet',
   5: '',
   6: '0000',
   7: 'file_uploaded',

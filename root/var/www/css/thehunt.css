@@ -47,7 +47,7 @@ input[type="button"] {
   margin: 0.25em;
 }
 
-#stageOneCode {
+.code {
   font-family: monospace;
   letter-spacing: 0.5em;
   font-size: 2em;
@@ -146,6 +146,14 @@ input[type="button"] {
 
 #lock li {
   box-shadow: inset -4px -7px 3px gray, inset 4px 7px 4px white;
+}
+
+.lock-hint {
+  display: flex;
+  justify-content: space-between;
+  width: 30%;
+  margin: auto;
+  padding-right: 1.5em;
 }
 
 #file-preview {
