@@ -30,7 +30,7 @@ function _ajax(method, url, callback) {
       setToaster(result.target.response);
     } else if (this.status === 413) {
       setToaster('File too large.')
-    }else {
+    } else {
       var response = JSON.parse(result.target.response);
       if (response["message"]) {
         setToaster(response["message"]);
@@ -47,13 +47,18 @@ function ajax(method, url, callback) {
 }
 
 // Server requests
-function getCurrentStage(table, callback) {
-  var url = URL + "table/" + table;
+function getCurrentStage(callback) {
+  var url = URL + "game_state";
   ajax("GET", url, callback);
 }
 
-function getNotifications(table) {
-  var url = URL + "notification/" + table;
+function setTable(table, callback) {
+  var url = URL + "table?table=" + table;
+  ajax("POST", url, callback);
+}
+
+function getNotifications() {
+  var url = URL + "notification";
   ajax("GET", url, function(response) {
     if (response["upcoming_table"]) {
       setToaster("Andy and Melanie are visiting your table soon! Please head back over!");
@@ -78,7 +83,7 @@ function submit() {
   });
 }
 
-function submitLock(table, stage) {
+function submitLock(stage) {
   var dials = [
     document.getElementById("dial-0"),
     document.getElementById("dial-1"),
@@ -90,7 +95,7 @@ function submitLock(table, stage) {
     answer += getLockElement(dials[i]).innerHTML;
   }
 
-  var values = [`answer=${answer}`, `table=${table}`, `stage=${stage}`];
+  var values = [`answer=${answer}`, `stage=${stage}`];
   var url = URL + "submit" + "?" + values.join("&");
   ajax("POST", url, function (response) {
     if (response["correct"]) {
@@ -103,23 +108,12 @@ function submitLock(table, stage) {
   });
 }
 
-function getStageOneCode(table, callback) {
-  var url = URL + "stageOneCode?table=" + table;
+function getStageOneCode(callback) {
+  var url = URL + "stageOneCode";
   ajax("GET", url, callback);
 }
 
 // Helpers
-function getTableFromCookie() {
-  var cookies = document.cookie.split(";");
-  for (var i = 0; i < cookies.length; i++) {
-    var cookie = cookies[i].split("=");
-    if (cookie[0].trim() === "table") {
-      return parseInt(cookie[1]);
-    }
-  }
-  return null;
-}
-
 function clear() {
   var content = document.getElementById("content");
   while (content.firstChild) {
@@ -134,8 +128,8 @@ function submitTable() {
   var interval = Math.round(parseFloat(height.replace("px", "")));
   var table = Math.round(document.getElementById("table-selector").scrollTop / interval) + 1;
 
-  getCurrentStage(table, function (response) {
-    document.cookie = `table=${table}`;
+  setTable(table, function (response) {
+    setHeader(table);
     setStage(response["stage"]);
   });
 }
@@ -165,11 +159,10 @@ function setFooter(stage) {
   footerElement.innerHTML = stage;
 }
 
-function createSubmitForm(table, stage) {
+function createSubmitForm(stage) {
   return `
 <div id="form">
   <input type="text" id="form-table" name="answer">
-  <input type="hidden" value=${table} name="table">
   <input type="hidden" value=${stage} name="stage">
   <input type="button" value="❯" onClick="submit()">
 </div>
@@ -228,6 +221,7 @@ function createListElement(num) {
 
 // Stages
 function setStageZero() {
+  setHeader(0);
   var tableElements = '';
   var numTables = 28;
   for (var i = 1; i < numTables + 1; i++) {
@@ -267,23 +261,23 @@ function setStageZero() {
   });
 }
 
-function setStageOne(table) {
+function setStageOne() {
   var page = `
 <div>
   <p class="story">Bryan, a groomsman, had to place the table numbers on the table when he got to the venue. He found some peculiar letters at your table but didn’t think too much of it.</p>
   <div id="stageOneCode"></div>
-${createSubmitForm(table, 1)}
+${createSubmitForm(1)}
 </div>
   `;
   setContent(page);
 
-  getStageOneCode(table, function (response) {
+  getStageOneCode(function (response) {
     var element = document.getElementById("stageOneCode");
     element.innerHTML = response["code"];
   });
 }
 
-function setStageTwo(table) {
+function setStageTwo() {
   var page = `
 <div>
   <div class="picture-cipher">
@@ -298,50 +292,50 @@ function setStageTwo(table) {
     <img class="picture-cipher-img" src="/images/thehunt/whisk.jpg" />
     <span>=</span>
   </div>
-${createSubmitForm(table, 2)}
+${createSubmitForm(2)}
 </div>
   `;
   setContent(page);
 }
 
-function setStageThree(table) {
+function setStageThree() {
   var page = `
 <div>
   <p class="story">Look under your chair.</p>
-${createSubmitForm(table, 3)}
+${createSubmitForm(3)}
 </div>
   `;
   setContent(page);
 }
 
-function setStageFour(table) {
+function setStageFour() {
   var page = `
 <div>
   <p class="story">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent egestas elit eget ipsum tincidunt faucibus. Vestibulum eu condimentum turpis. Curabitur congue lectus diam, iaculis interdum elit tincidunt quis. Vivamus gravida vulputate suscipit. Nunc porta est tellus, commodo iaculis dolor gravida et. Nunc eget lectus eget augue interdum pharetra. Morbi tincidunt accumsan efficitur. Integer bibendum velit in urna eleifend facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
   <p class="story">Sed a risus at ante dignissim sodales eu ut neque. Nunc hendrerit laoreet libero nec sagittis. In sit amet orci ut nunc imperdiet ornare sed nec dolor. Nulla quis nisl condimentum sapien placerat molestie ut sit amet arcu. Nunc elementum tortor dignissim, fermentum est quis, consequat felis. Vivamus rhoncus quam non tristique rutrum. In dui est, luctus at efficitur nec, vehicula id erat. Pellentesque commodo magna a tortor laoreet, molestie vulputate arcu volutpat.</p>
   <p class="story">Curabitur at turpis velit. Proin tristique ligula sem, eget ornare dolor tristique a. Curabitur accumsan neque justo, ullamcorper convallis dui faucibus sed. Donec metus massa, rutrum non elit vel, dapibus tempus purus. Sed at nisl sem. Suspendisse placerat libero sit amet libero volutpat, id iaculis turpis feugiat. Integer ut purus ac lectus ornare euismod ut sit amet metus. Curabitur in erat rutrum, facilisis nibh ut, maximus nulla. Vestibulum suscipit neque nunc, suscipit tincidunt diam pharetra finibus. Phasellus pharetra leo non nulla rhoncus, eget rhoncus nibh varius. Nulla ultrices feugiat nisl, quis placerat mauris volutpat a. Praesent mollis enim commodo consequat scelerisque. Vivamus vitae velit erat. Nunc faucibus aliquet justo, sed rutrum nunc. Vivamus tortor lacus, pretium ut lacinia sit amet, lacinia et leo.</p>
-${createSubmitForm(table, 4)}
+${createSubmitForm(4)}
 </div>
   `;
   setContent(page);
 }
 
-function setStageFive(table) {
+function setStageFive() {
   var page = `
 <div>
-${createSubmitForm(table, 5)}
+${createSubmitForm(5)}
 </div>
   `;
   setContent(page);
 }
 
-function setStageSix(table) {
+function setStageSix() {
   var page = `
 <div>
   <div id="lock-form">
     ${createLock()}
-    <input type="button" value="❯" onClick="submitLock(${table}, 6)">
+    <input type="button" value="❯" onClick="submitLock(6)">
   </div>
 </div>
   `;
@@ -400,7 +394,7 @@ function setStageSix(table) {
   }, 500);
 }
 
-function setStageSeven(table) {
+function setStageSeven() {
   var page = `
 <div>
   <form id="file-upload-form">
@@ -430,7 +424,7 @@ function setStageSeven(table) {
 
   var submitButton = document.getElementById("file-upload-submit");
   submitButton.onclick = function() {
-    var values = [`table=${table}`, "stage=7"];
+    var values = ["stage=7"];
     var url = URL + "submit" + "?" + values.join("&");
     var req = _ajax("POST", url, function (response) {
       if (response["correct"]) {
@@ -450,7 +444,7 @@ function setStageSeven(table) {
   }
 }
 
-function setStageEight(table) {
+function setStageEight() {
   var page = `
 <div>
   <div id="grid">
@@ -562,27 +556,25 @@ function setStageEight(table) {
 }
 
 function setStage(stage) {
-  var table = getTableFromCookie();
   clear();
-  setHeader(table);
   if (stage === 0) {
     setStageZero();
   } else if (stage === 1) {
-    setStageOne(table);
+    setStageOne();
   } else if (stage === 2) {
-    setStageTwo(table);
+    setStageTwo();
   } else if (stage === 3) {
-    setStageThree(table);
+    setStageThree();
   } else if (stage === 4) {
-    setStageFour(table);
+    setStageFour();
   } else if (stage === 5) {
-    setStageFive(table);
+    setStageFive();
   } else if (stage === 6) {
-    setStageSix(table);
+    setStageSix();
   } else if (stage === 7) {
-    setStageSeven(table);
+    setStageSeven();
   } else if (stage === 8) {
-    setStageEight(table);
+    setStageEight();
   }
 
   setFooter(stage);
@@ -592,20 +584,19 @@ function setStage(stage) {
 function main() {
   // Check for notifications every 30 seconds
   setInterval(function() {
-    var table = getTableFromCookie();
-    if (table) {
-      getNotifications(table);
-    }
+    getNotifications();
   }, 30000);
 
-  var table = getTableFromCookie();
-  if (table) {
-    getCurrentStage(table, function (response) {
+  getCurrentStage(function (response) {
+    if (response["table"]) {
+      setHeader(response["table"]);
+    }
+    if (response["stage"]) {
       setStage(response["stage"]);
-    });
-  } else {
-    setStage(0);
-  }
+    } else {
+      setStage(0);
+    }
+  });
 }
 
 main();

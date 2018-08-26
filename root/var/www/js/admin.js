@@ -52,9 +52,10 @@ function main() {
     var stateElement = document.getElementById("state");
     for(var i = 0; i < response.length; i++) {
       var table = response[i][0];
-      var stage = response[i][1];
+      var user_id = response[i][1];
+      var stage = response[i][2];
       var tableElement = document.createElement("div");
-      tableElement.innerHTML = table + ": Stage " + stage;
+      tableElement.innerHTML = "Table " + table + "|" + user_id + ": Stage " + stage;
       stateElement.appendChild(tableElement);
     }
   });
