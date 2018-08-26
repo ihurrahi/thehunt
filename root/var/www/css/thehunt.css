@@ -204,6 +204,14 @@ input[type="button"] {
   padding: 1em;
 }
 
+#months {
+  width: 358px;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 2.5em;
+  font-family: monospace;
+}
+
 #grid {
   position: relative;
   display: grid;
