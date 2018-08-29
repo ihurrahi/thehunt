@@ -73,7 +73,7 @@ function submit() {
   var values = [];
   for(var i = 0; i < elements.length; i++){
     var item = elements.item(i);
-    if (item.type !== "button") {
+    if (item.type !== "button" && item.tagName !== "LABEL") {
       values.push(item.name + "=" + item.value);
     }
   }
@@ -106,6 +106,16 @@ function submitLock(stage) {
       for (var i = 0; i < dials.length; i++) {
         resetLock(dials[i]);
       }
+    }
+  });
+}
+
+function submitStageNine() {
+  var values = [`answer=birthdays`, `stage=9`];
+  var url = URL + "submit" + "?" + values.join("&");
+  ajax("POST", url, function (response) {
+    if (response["correct"]) {
+      setStage(response["stage"]);
     }
   });
 }
@@ -588,14 +598,14 @@ function setStageNine() {
   var elementSize = 32; // 2em
   // TODO: this is bad - the answers are available client side
   var bubbles = {
-    "bubble-sam": {display: "SM", className: "bubble green", answer: [4, 11], start: [11, 10] },
-    "bubble-sheldon": {display: "SC", className: "bubble green", answer: [1, 1], start: [6, 29] },
-    "bubble-matt": {display: "MC", className: "bubble green", answer: [1, 1], start: [11, 17] },
-    "bubble-bryan": {display: "BL", className: "bubble green", answer: [1, 1], start: [2, 20] },
-    "bubble-meaghan": {display: "MY", className: "bubble pink", answer: [1, 1], start: [1, 1] },
-    "bubble-anna": {display: "AS", className: "bubble pink", answer: [1, 1], start: [6, 25] },
-    "bubble-lillian": {display: "LW", className: "bubble pink", answer: [1, 1], start: [7, 19] },
-    "bubble-shay": {display: "SP", className: "bubble pink", answer: [1, 1], start: [3, 2] },
+    "bubble-sam": {display: "SM", className: "bubble green", answer: [4, 22], start: [11, 10] },
+    "bubble-sheldon": {display: "SC", className: "bubble green", answer: [3, 20], start: [6, 29] },
+    "bubble-matt": {display: "MC", className: "bubble green", answer: [3, 1], start: [11, 17] },
+    "bubble-bryan": {display: "BL", className: "bubble green", answer: [10, 18], start: [2, 20] },
+    "bubble-meaghan": {display: "MY", className: "bubble pink", answer: [11, 6], start: [1, 1] },
+    "bubble-anna": {display: "AS", className: "bubble pink", answer: [3, 9], start: [6, 25] },
+    "bubble-lillian": {display: "LW", className: "bubble pink", answer: [7, 28], start: [7, 19] },
+    "bubble-shay": {display: "SP", className: "bubble pink", answer: [4, 29], start: [3, 2] },
   };
 
   var grid = document.getElementById("grid");
@@ -659,17 +669,16 @@ function setStageNine() {
       for (var i = 0; i < draggables.length; i++) {
         var draggable = draggables[i];
         var answer = bubbles[draggable.target.id].answer;
-        var loc = [draggable.x / elementSize, draggable.y / elementSize];
+        var loc = [(draggable.x / elementSize) + 1, (draggable.y / elementSize) + 1];
         if (loc[0] != answer[0] || loc[1] != answer[1]) {
           correct = false;
         }
       }
       if (correct) {
-        // TODO: move onto the next stage
-        setToaster("Correct!");
-      } else {
+        submitStageNine();
+      }/* else {
         setToaster([this.x / elementSize, this.y / elementSize]);
-      }
+      }*/
     }
   });
 
@@ -685,7 +694,7 @@ function setStageNine() {
 function setStageTen() {
    var page = `
 <div>
-  <p class="story"></p>
+  <p class="story">Almost there...</p>
   <p class="story action"></p>
 ${createSubmitForm(10)}
 </div>
@@ -697,7 +706,7 @@ function setStageEleven() {
   var page = `
 <div>
   <p class="story">You did it! You found the ring!</p>
-  <p class="story">Show this page to Andy and Melanie to take a special picture with them!</p>
+  <p class="story action">Show this page to Andy and Melanie to take a special picture with them!</p>
 </div>
   `;
   setContent(page);
