@@ -13,8 +13,8 @@ ANSWERS = {
   1: 'diamond',
   2: 'icecream',
   3: 'chanyoufeelthelauvtonight',
-  4: 'bouquet',
-  5: '',
+  4: '',
+  5: 'bouquet',
   6: '0000',
   7: 'file_uploaded',
   8: '',
@@ -54,7 +54,7 @@ def get_game_state():
   else:
     response = jsonify({ 'table': table })
     new_user_id = str(uuid4())
-    game_state[new_user_id] = 1
+    game_state[new_user_id] = 0
     response.set_cookie('user_id', new_user_id)
     return response
 
@@ -64,6 +64,7 @@ def set_table():
   user_id = request.cookies.get('user_id')
   table = int(request.args.get('table', '')) 
   user_to_table[user_id] = table
+  game_state[user_id] = 1
   return jsonify({ 'stage': 1 })
 
 # TODO: actually use POST data instead of request args

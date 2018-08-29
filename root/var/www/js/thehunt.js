@@ -125,11 +125,17 @@ function clear() {
   hideHint();
 }
 
-function submitTable() {
+function getTable() {
   // We retrieve the table number based on how far down the container we've scrolled to
   var height = getComputedStyle(document.getElementById("table-1")).height;
   var interval = Math.round(parseFloat(height.replace("px", "")));
   var table = Math.round(document.getElementById("table-selector").scrollTop / interval) + 1;
+
+  return table;
+}
+
+function submitTable() {
+  var table = getTable();
 
   setTable(table, function (response) {
     setHeader(table);
@@ -137,18 +143,23 @@ function submitTable() {
   });
 }
 
+function setStageHeader(stage) {
+  var stageElement = document.getElementById("stage");
+  stageElement.innerHTML = `<p>${stage}: <p>`;
+}
+
 function setHeader(table) {
   var header = "";
   if (table) {
     header = `
-  <h3>Table ${table}</h3>
+  <p>Table ${table}</p>
     `;
   } else {
     header = `
   <h2>Welcome to the The Hunt!</h2>
     `;
   }
-  var headerElement = document.getElementById("header");
+  var headerElement = document.getElementById("header-text");
   headerElement.innerHTML = header;
 }
 
@@ -188,9 +199,10 @@ function hideHint() {
 function createSubmitForm(stage) {
   return `
 <div id="form">
+  <label for="form-table">Answer:</label>
   <input type="text" id="form-table" name="answer">
   <input type="hidden" value=${stage} name="stage">
-  <input type="button" value="❯" onClick="submit()">
+  <input type="button" value="Submit ❯" onClick="submit()">
 </div>
   `;
 }
@@ -249,14 +261,11 @@ function createListElement(num) {
 function setStageZero() {
   setHeader(0);
   var tableElements = "";
-  var numTables = 28;
+  var numTables = 23;
   for (var i = 1; i < numTables + 1; i++) {
     var classNames = "";
     if (i == 1) {
-      classNames = "top";
-    }
-    if (i == numTables) {
-      classNames = "bottom";
+      classNames = "selected";
     }
     tableElements += `<li id=table-${i} class=${classNames}>${i}</li>`;
   }
@@ -264,14 +273,14 @@ function setStageZero() {
   var page = `
 <div>
   <p class="story">Oh no! What?!?! How can this be?! The wedding ring is missing! In all of the excitement and chaos, the Bridal party has misplaced the wedding ring and has no idea where it could be. They’ve looked high; they’ve looked low; they’ve even looked in between a few places but have come up empty handed. They’ve managed to keep the newly weds from finding out their blunder but the night is quickly coming to an end, and they need your help! A member of the bridal party remembers seeing the bride with the ring right after the ceremony, so they know it’s somewhere here. Retrace all the steps of the bridal party and put on your deerstalker cap. Piece together the clues to find the missing ring and return it to the new bride before she even notices.</p>
-  <p class="story">Which table are you part of?</p>
+  <p class="story action">Which table are you part of?</p>
 
   <div id="form-table">
     <div class="box"></div>
     <ul class="scroll-container" id="table-selector">
       ${tableElements}
     </ul>
-    <input type="button" value="❯" onClick="submitTable()">
+    <input type="button" value="Submit ❯" onClick="submitTable()">
   </div>
 </div>
 `;
@@ -284,6 +293,18 @@ function setStageZero() {
     liveSnap: function(endValue) {
       return -Math.round(endValue / gridHeight) * gridHeight;
     },
+    onDrag: function() {
+      var table = getTable();
+      var list = document.getElementsByTagName("li");
+      for (var i = 0; i < list.length; i++) {
+        var el = list[i];
+        if (el.id === `table-${table}`) {
+          el.className = "selected";
+        } else {
+          el.className = "";
+        }
+      }
+    },
   });
 }
 
@@ -291,6 +312,7 @@ function setStageOne() {
   var page = `
 <div>
   <p class="story">Bryan, a groomsman, had to place the table numbers on the table when he got to the venue. He found some peculiar letters at your table but didn’t think too much of it.</p>
+  <p class="story action">Help Bryan decipher these letters!</p>
   <div class="code" id="stageOneCode"></div>
 ${createSubmitForm(1)}
 </div>
@@ -319,6 +341,7 @@ function setStageTwo() {
     <img class="picture-cipher-img" src="/images/thehunt/whisk.jpg" />
     <span>=</span>
   </div>
+  <p class="story action">What are these pictures trying to say?</p>
 ${createSubmitForm(2)}
 </div>
   `;
@@ -331,14 +354,15 @@ function setStageThree() {
 <div>
   <p class="story">Matt, usually calm and collected, can&apos;t believe this is happening. He is stressed out and running all over the place flipping everything inside and out, over and under, sideways and around. He is usually pretty good at seeing the trees within the forest.</p>
   <div class="code">
-    <p>T L M O B O C</p>
-    <p>K O U A N X D</p>
-    <p>U E L R T N U</p>
-    <p>E Q A A T T H</p>
-    <p>L T M H U E F</p>
-    <p>T F A E B S L</p>
-    <p>T E A T B S L</p>
+    <p>TLMOBOC</p>
+    <p>KOUANXD</p>
+    <p>UELRTNU</p>
+    <p>EQAATTH</p>
+    <p>LTMHUEF</p>
+    <p>TFAEBSL</p>
+    <p>TEATBSL</p>
   </div>
+  <p class="story action">Help Matt find the hidden message.</p>
 ${createSubmitForm(3)}
 </div>
   `;
@@ -346,37 +370,38 @@ ${createSubmitForm(3)}
   setHint("every other");
 }
 
+
 function setStageFour() {
   var page = `
 <div>
-  <p class="story">Alone... only forward can you see.</p>
-  <p class="story">But with a friend, the past becomes clear.</p>
-  <div class="code">
-    <pre>        X    </pre>
-    <pre>  X          </pre>
-    <pre>            X</pre>
-    <pre>  X          </pre>
-    <pre>        X    </pre>
-    <pre>      X      </pre>
-    <pre>      X      </pre>
-  </div>
-
+  <p class="story">Anna is dumbfounded. She usually always has an answer. If only there was a place to get all our questions answered...</p>
+  <p class="story action">Find the answer Anna is looking for!</p>
 ${createSubmitForm(4)}
 </div>
   `;
   setContent(page);
-  setHint("you're not allowed to look back in time, but maybe a friend at your table can help you!");
+  setHint("/andyplusmelanie/qa");
 }
 
 function setStageFive() {
   var page = `
 <div>
-  <p class="story">Anna is dumbfounded. She usually always has an answer. If only there was a place to get all our questions answered...</p>
+  <p class="story">Alone... only forward can you see. But with a friend, the past becomes clear.</p>
+  <div class="code">
+    <p>••••X••</p>
+    <p>•X•••••</p>
+    <p>••••••X</p>
+    <p>•X•••••</p>
+    <p>••••X••</p>
+    <p>•••X•••</p>
+    <p>•••X•••</p>
+  </div>
+  <p class="story action">Can you find the hidden message?</p>
 ${createSubmitForm(5)}
 </div>
   `;
   setContent(page);
-  setHint("/andyplusmelanie/qa");
+  setHint("you're not allowed to look backwards, but maybe a friend at your table can help you!");
 }
 
 function setStageSix() {
@@ -455,14 +480,15 @@ function setStageSeven() {
 <div>
   <p class="story">What are we going to say to Melanie about the ring? No, it&apos;s too early to start thinking of apologies. We can&apos;t give up yet. There has to be some place we haven&apos;t checked yet.</p>
   <p class="story">Shay and Lillian got some goofy pictures in at the photobooth. Maybe the ring got mixed in with all of the props.</p>
+  <p class="story action">Since you&apos;re already at the photobooth, upload a funny picture!</p>
   <form id="file-upload-form">
     <input type="file" id="file-upload" name="file" accept="image/*;capture=camera">
-    <img id="file-preview" src="#">
     <div class="file-submit-container">
-      <input type="button" id="file-upload-submit" value="Submit">
       <div id="file-upload-progress"></div>
-    <div>
+      <input type="button" id="file-upload-submit" value="Submit ❯">
+    </div>
   </form>
+  <img id="file-preview" src="#">
 </div>
   `;
   setContent(page);
@@ -506,6 +532,7 @@ function setStageEight() {
   var page = `
 <div>
   <p class="story">Sheldon, oddly stoic, can&apos;t remember that there are any rings at all. Where and when would he see rings, he wonders. He thinks long and hard; trying to flip through his memories like a Sherlock mind palace but he doesn&apos;t remember. He only remembers how terrible his memory is.</p>
+  <p class="story action">Can you figure out what Sheldon was trying to remember?</p>
 ${createSubmitForm(8)}
 </div>
   `;
@@ -643,6 +670,7 @@ function setStageTen() {
    var page = `
 <div>
   <p class="story"></p>
+  <p class="story action"></p>
 ${createSubmitForm(10)}
 </div>
   `;
@@ -661,6 +689,11 @@ function setStageEleven() {
 
 function setStage(stage) {
   clear();
+
+  if (stage !== 0) {
+    setStageHeader(stage);
+  }
+
   if (stage === 0) {
     setStageZero();
   } else if (stage === 1) {
