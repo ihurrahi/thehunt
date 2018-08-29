@@ -214,7 +214,11 @@ function createLock() {
     var nums = "";
     for (var j = 0; j < 10; j++) {
       var num = (j + 5) % 10;
-      nums += `<li>${num}</li>`;
+      var classNames = "";
+      if (num === 0) {
+        classNames = "selected";
+      }
+      nums += `<li class="${classNames}">${num}</li>`;
     }
     elements += `
 <ul id=dial-${i} class="scroll-container">
@@ -265,9 +269,12 @@ function setStageZero() {
   for (var i = 1; i < numTables + 1; i++) {
     var classNames = "";
     if (i == 1) {
-      classNames = "selected";
+      classNames = "top selected";
     }
-    tableElements += `<li id=table-${i} class=${classNames}>${i}</li>`;
+    if (i == numTables) {
+      classNames = "bottom";
+    }
+    tableElements += `<li id=table-${i} class="${classNames}">${i}</li>`;
   }
 
   var page = `
@@ -299,9 +306,9 @@ function setStageZero() {
       for (var i = 0; i < list.length; i++) {
         var el = list[i];
         if (el.id === `table-${table}`) {
-          el.className = "selected";
+          el.classList.add("selected");
         } else {
-          el.className = "";
+          el.classList.remove("selected");
         }
       }
     },
@@ -427,6 +434,15 @@ function setStageSix() {
     liveSnap: function(endValue) {
       var height = document.getElementsByTagName("li")[0].clientHeight;
       return -Math.round(endValue / (height / 2)) * (height / 2);
+    },
+    onDrag: function() {
+      var element = getLockElement(this.target);
+      console.log(element);
+      var list = element.parentElement.children;
+      for (var i = 0; i < list.length; i++) {
+        list[i].classList.remove("selected");
+      }
+      element.classList.add("selected");
     },
     onDragEnd: function() {
       var height = document.getElementsByTagName("li")[0].clientHeight;

@@ -144,11 +144,11 @@ input[type="text"] {
   color: black;
 }
 
-.scroll-container li:first-child {
+.scroll-container li.top {
   padding-top: 1em;
 }
 
-.scroll-container li:last-child {
+.scroll-container li.bottom {
   padding-bottom: 3em;
 }
 
