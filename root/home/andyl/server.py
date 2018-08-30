@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from flask import Flask, jsonify, request
+from random import choice
 from string import ascii_lowercase
 from uuid import uuid4
 
@@ -21,6 +22,11 @@ ANSWERS = {
   9: 'birthdays',
   10: '',
 }
+WRONG_ANSWER_RESPONSES = [
+  'Not quite...',
+  'Incorrect, try again!',
+  'Sorry, that\'s not right',
+]
 
 num_tables = 23
 visited_state = dict((table, False) for table in range(1, num_tables + 1))
@@ -84,7 +90,7 @@ def submit():
   except ValueError:
     return jsonify({'message': 'An error occurred.'}), 404
 
-  response = {'stage': stage, 'correct': False, 'message': 'incorrect'}
+  response = {'stage': stage, 'correct': False, 'message': choice(WRONG_ANSWER_RESPONSES)}
   if stage in ANSWERS and ANSWERS[stage] == answer:
     response = {'stage': stage + 1, 'correct': True}
     game_state[user_id] = max(game_state[user_id], stage + 1)
