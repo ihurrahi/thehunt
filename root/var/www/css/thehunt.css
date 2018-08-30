@@ -96,6 +96,10 @@ input[type="text"] {
   max-width: 10em;
 }
 
+#hint-container {
+  font-family: monospace;
+}
+
 .story {
   line-height: 2em;
 }

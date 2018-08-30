@@ -1,4 +1,5 @@
 var URL = "http://thinkingalaud.com/api/";
+var hintTimeouts = [];
 
 // Cause js modulo is stupid
 function mod(x, n) {
@@ -183,27 +184,47 @@ function setHiddenStage(stage) {
   element.innerHTML = stage;
 }
 
-function setHint(hint) {
+function setHint(hint, onshow) {
   var element = document.getElementById("hint");
-  element.style.display = "block";
   var hintModal = document.getElementById("hintModal");
   var content = document.getElementById("hintModalContent");
   element.onclick = function() {
     hintModal.style.display = "block";
+    if (onshow) {
+      onshow();
+    }
   }
   // When the user clicks anywhere outside of the modal, close it
   document.onclick = function(event) {
     if (event.target !== hintModal && event.target !== element) {
       hintModal.style.display = "none";
+      for (var i = 0; i < hintTimeouts.length; i++) {
+        clearTimeout(hintTimeouts[i]);
+      }
+      hintTimeouts = [];
     }
   }
 
   content.innerHTML = hint;
+
+  setTimeout(function () {
+    element.style.display = "block";
+  }, 60000);
 }
 
 function hideHint() {
   var element = document.getElementById("hint");
   element.style.display = "none";
+}
+
+function cycleMessage(container, message) {
+  container.innerHTML = message[0];
+  if (message.length > 1) {
+    var timer = setTimeout(function() {
+      cycleMessage(container, message.substring(1));
+    }, 500);
+    hintTimeouts.push(timer);
+  }
 }
 
 function createSubmitForm(stage) {
@@ -564,7 +585,11 @@ ${createSubmitForm(8)}
 </div>
   `;
   setContent(page);
-  setHint("memory station");
+
+  setHint(`<div id="hint-container"></div>`, function() {
+    var container = document.getElementById("hint-container");
+    cycleMessage(container, "walkwithusdownmemorylane ");
+  });
 }
 
 function setStageNine() {
