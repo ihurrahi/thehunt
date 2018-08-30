@@ -437,7 +437,7 @@ function setStageSix() {
 </div>
   `;
   setContent(page);
-  setHint("find me!")
+  setHint(`find me: <span class="red">🌑</span>`)
 
   Draggable.create(".scroll-container", {
     type: "scroll",
@@ -558,6 +558,7 @@ function setStageEight() {
   var page = `
 <div>
   <p class="story">Sheldon, oddly stoic, can&apos;t remember that there are any rings at all. Where and when would he see rings, he wonders. He thinks long and hard; trying to flip through his memories like a Sherlock mind palace but he doesn&apos;t remember. He only remembers how terrible his memory is.</p>
+  <p class="story blue code">🌑</p>
   <p class="story action">Can you figure out what Sheldon was trying to remember?</p>
 ${createSubmitForm(8)}
 </div>

@@ -17,7 +17,7 @@ ANSWERS = {
   5: 'bouquet',
   6: '0923',
   7: 'file_uploaded',
-  8: 'kiss',
+  8: 'toast',
   9: 'birthdays',
   10: '',
 }

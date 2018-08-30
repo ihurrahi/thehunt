@@ -17,6 +17,14 @@ input[type="text"] {
   height: 2em;
 }
 
+.red {
+  color: #FF554C;
+}
+
+.blue {
+  color: #5969C6;
+}
+
 .hidden {
   color: white;
 }
