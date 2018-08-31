@@ -89,12 +89,13 @@ def set_table():
 def submit():
   try:
     user_id = request.cookies.get('user_id')
+    table = user_to_table[user_id]
     stage = int(request.args.get('stage', ''))
     answer = request.args.get('answer', '').replace(' ', '').lower()
     if stage == 3:
       answer = answer.replace('#', '')
     if stage == 7:
-      fname = "user_" + user_id + "_" + str(uuid4())
+      fname = "table_" + table + "_user_" + user_id
       with open(fname, "wb") as f:
         f.write(request.files.get('file').read())
       answer = 'file_uploaded'
