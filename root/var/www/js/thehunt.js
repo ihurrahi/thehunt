@@ -452,6 +452,7 @@ ${createSubmitForm(5)}
 function setStageSix() {
   var page = `
 <div>
+  <p class="story">Oh no! You&apos;re suddenly locked in! Good thing the combination is in plain sight around you.</p>
   <div id="lock-form">
     ${createLock()}
     <input type="button" value="❯" onClick="submitLock(6)">
