@@ -1,6 +1,7 @@
 #!/usr/bin/python
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask, jsonify, request
+from json import dumps
 from pytz import timezone
 from random import choice
 from string import ascii_lowercase
@@ -35,6 +36,23 @@ START_HOUR = 0
 
 num_tables = 23
 visited_state = dict((table, False) for table in range(1, num_tables + 1))
+
+last_save = datetime.now()
+
+def save_state():
+  fname = 'state_' + datetime.utcnow().isoformat()
+  with open(fname, 'wb') as f:
+    f.write(dumps(user_to_table, indent=2))
+    f.write(dumps(game_state, indent=2))
+
+@app.after_request
+def after_request(response):
+  global last_save
+  now = datetime.now()
+  if now - last_save > timedelta(seconds=30):
+    save_state()
+    last_save = datetime.now()
+  return response
 
 @app.route('/api/admin/visit/<int:table>', methods=['POST'])
 def edit_visit(table):
