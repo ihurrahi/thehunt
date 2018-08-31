@@ -38,7 +38,9 @@ function _ajax(method, url, callback) {
       if (response["message"]) {
         setToaster(response["message"]);
       }
-      callback(response);
+      if (!response["error"]) {
+        callback(response);
+      }
     }
   });
   return xhttp;

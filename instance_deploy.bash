@@ -4,6 +4,7 @@ STAGING_DIR=~/website_staging
 # TODO: check if thinkingalaud virtualenv installed
 # . thinkingalaud/bin/activate
 # pip install Flask
+# pip install pytz
 
 sudo rm -rf temp-stage
 sudo mkdir temp-stage

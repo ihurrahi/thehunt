@@ -1,5 +1,7 @@
 #!/usr/bin/python
+from datetime import datetime
 from flask import Flask, jsonify, request
+from pytz import timezone
 from random import choice
 from string import ascii_lowercase
 from uuid import uuid4
@@ -27,6 +29,9 @@ WRONG_ANSWER_RESPONSES = [
   'Incorrect, try again!',
   'Sorry, that\'s not right',
 ]
+START_HOUR = 0
+# Uncomment when ready to play
+# START_HOUR = 20
 
 num_tables = 23
 visited_state = dict((table, False) for table in range(1, num_tables + 1))
@@ -67,6 +72,12 @@ def get_game_state():
 # TODO: actually use POST data instead of request args
 @app.route('/api/table', methods=['POST'])
 def set_table():
+  pst = timezone('America/Los_Angeles')
+  now = datetime.now(tz=pst)
+  if now.hour < START_HOUR:
+    minutes_left = int(ceil((now.replace(hour=START_HOUR, minute=0, second=0, microsecond=0) - now).seconds / 60.0))
+    return jsonify({ 'error': True, 'message': 'It\'s not time yet - %d more minutes!' % minutes_left})
+
   user_id = request.cookies.get('user_id')
   table = int(request.args.get('table', '')) 
   user_to_table[user_id] = table
