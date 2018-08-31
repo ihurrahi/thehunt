@@ -561,6 +561,7 @@ function setStageSeven() {
 
   var submitButton = document.getElementById("file-upload-submit");
   submitButton.onclick = function() {
+    submitButton.disabled = true;
     var values = ["stage=7"];
     var url = URL + "submit" + "?" + values.join("&");
     var req = _ajax("POST", url, function (response) {

@@ -13,6 +13,10 @@ input[type="button"] {
   height: 2em;
 }
 
+input[type="button"]:disabled {
+  color: #DDDDDD;
+}
+
 input[type="text"] {
   height: 2em;
 }
