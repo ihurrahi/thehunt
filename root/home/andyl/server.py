@@ -1,7 +1,8 @@
 #!/usr/bin/python
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, request
-from json import dumps
+from json import dumps, loads
+from os import listdir
 from pytz import timezone
 from random import choice
 from string import ascii_lowercase
@@ -41,9 +42,29 @@ last_save = datetime.now()
 
 def save_state():
   fname = 'state_' + datetime.utcnow().isoformat()
+  data = {
+    'user_to_table': user_to_table,
+    'game_state': game_state,
+  }
   with open(fname, 'wb') as f:
-    f.write(dumps(user_to_table, indent=2))
-    f.write(dumps(game_state, indent=2))
+    f.write(dumps(data, indent=2))
+
+@app.before_first_request
+def load_state():
+  files = listdir('.')
+  latest_state = (None, datetime(2017, 1, 1))
+  for f in files:
+    if f.startswith('state'):
+      t = datetime.strptime(f.replace('state_', ''), '%Y-%m-%dT%H:%M:%S.%f')
+      if t > latest_state[1]:
+        latest_state = (f, t)
+  if latest_state[0] is not None:
+    global user_to_table
+    global game_state
+    with open(latest_state[0], 'rb') as f:
+      data = loads(f.read())
+      user_to_table = data['user_to_table']
+      game_state = data['game_state']
 
 @app.after_request
 def after_request(response):
