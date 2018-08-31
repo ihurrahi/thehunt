@@ -6,6 +6,12 @@ function mod(x, n) {
   return ((x % n) + n) % n;
 }
 
+function removeHintTimeouts() {
+  for (var i = 0; i < hintTimeouts.length; i++) {
+    clearTimeout(hintTimeouts[i]);
+  }
+  hintTimeouts = [];
+}
 
 function setToaster(value) {
   var toaster = document.getElementById("toaster");
@@ -136,6 +142,7 @@ function clear() {
   }
   hideToaster();
   hideHint();
+  removeHintTimeouts();
 }
 
 function getTable() {
@@ -200,18 +207,16 @@ function setHint(hint, onshow) {
   document.onclick = function(event) {
     if (event.target !== hintModal && event.target !== element) {
       hintModal.style.display = "none";
-      for (var i = 0; i < hintTimeouts.length; i++) {
-        clearTimeout(hintTimeouts[i]);
-      }
-      hintTimeouts = [];
+      removeHintTimeouts();
     }
   }
 
   content.innerHTML = hint;
 
-  setTimeout(function () {
+  var timer = setTimeout(function () {
     element.style.display = "block";
   }, 60000);
+  hintTimeouts.push(timer);
 }
 
 function hideHint() {
@@ -460,7 +465,7 @@ function setStageSix() {
 </div>
   `;
   setContent(page);
-  setHint(`find me: <span class="red">🌑</span>`)
+  setHint(`find me: <span class="red">⬤</span>`)
 
   Draggable.create(".scroll-container", {
     type: "scroll",
@@ -470,7 +475,6 @@ function setStageSix() {
     },
     onDrag: function() {
       var element = getLockElement(this.target);
-      console.log(element);
       var list = element.parentElement.children;
       for (var i = 0; i < list.length; i++) {
         list[i].classList.remove("selected");
@@ -581,7 +585,7 @@ function setStageEight() {
   var page = `
 <div>
   <p class="story">Sheldon, oddly stoic, can&apos;t remember that there are any rings at all. Where and when would he see rings, he wonders. He thinks long and hard; trying to flip through his memories like a Sherlock mind palace but he doesn&apos;t remember. He only remembers how terrible his memory is.</p>
-  <p class="story blue code">🌑</p>
+  <p class="story blue code">⬤</p>
   <p class="story action">Can you figure out what Sheldon was trying to remember?</p>
 ${createSubmitForm(8)}
 </div>
@@ -610,6 +614,39 @@ function setStageNine() {
     <div>O</div>
     <div>N</div>
     <div>D</div>
+  </div>
+  <div id="days">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+    <div>6</div>
+    <div>7</div>
+    <div>8</div>
+    <div>9</div>
+    <div>10</div>
+    <div>11</div>
+    <div>12</div>
+    <div>13</div>
+    <div>14</div>
+    <div>15</div>
+    <div>16</div>
+    <div>17</div>
+    <div>18</div>
+    <div>19</div>
+    <div>20</div>
+    <div>21</div>
+    <div>22</div>
+    <div>23</div>
+    <div>24</div>
+    <div>25</div>
+    <div>26</div>
+    <div>27</div>
+    <div>28</div>
+    <div>29</div>
+    <div>30</div>
+    <div>31</div>
   </div>
   <div id="grid">
     <div id="inner-grid">

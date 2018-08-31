@@ -264,8 +264,20 @@ input[type="text"] {
   width: 358px;
   display: flex;
   justify-content: space-between;
-  margin-left: 2.5em;
+  margin-left: 31px;
   font-family: monospace;
+}
+
+#days {
+  float: left;
+  line-height: 32px;
+  font-family: monospace;
+  position: absolute;
+  z-index: 2;
+}
+
+#days div:first-child {
+  padding-top: 16px;
 }
 
 #grid {

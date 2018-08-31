@@ -113,7 +113,7 @@ def submit():
     if stage == 3:
       answer = answer.replace('#', '')
     if stage == 7:
-      fname = "table_" + table + "_user_" + user_id
+      fname = "table_" + str(table) + "_user_" + user_id
       with open(fname, "wb") as f:
         f.write(request.files.get('file').read())
       answer = 'file_uploaded'
