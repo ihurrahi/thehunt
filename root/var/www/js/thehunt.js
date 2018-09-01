@@ -452,7 +452,7 @@ ${createSubmitForm(5)}
 function setStageSix() {
   var page = `
 <div>
-  <p class="story">Oh no! You&apos;re suddenly locked in! Good thing the combination is in plain sight around you.</p>
+  <p class="story">Oh no! Sam accidentally locked us in! Good thing the combination is in plain sight around you.</p>
   <div id="lock-form">
     ${createLock()}
     <input type="button" value="❯" onClick="submitLock(6)">
@@ -761,19 +761,22 @@ function setStageNine() {
 function setStageTen() {
    var page = `
 <div>
-  <p class="story">Almost there...</p>
-  <p class="story action"></p>
+  <p class="story">Meaghan thinks that a higher vantage point could help with looking for where the ring is located. From where she is standing, she can see the entire golf course.</p>
+  <p class="story">It&apos;s gotten late and she can&apos;t see anything. Thankfully, there&apos;s a helpful light she found near the railing.</p>
+  <p class="story">The light didn&apos;t help with anything in sight, but maybe a remnant of an old clue can point you in the right direction.</p>
+  <p class="story action">Help Meaghan find what&apos;s hidden in plain sight!</p>
 ${createSubmitForm(10)}
 </div>
   `;
   setContent(page);
+  setHint("3:");
 }
 
 function setStageEleven() {
   var page = `
 <div>
-  <p class="story">You did it! You found the ring!</p>
-  <p class="story action">Show this page to Andy and Melanie to take a special picture with them!</p>
+  <p class="story">Amazing! The ring has been found! Turns out the ring was under the sweetheart table, right under their feet this whole time. What a relief! We can all finally enjoy Andy and Melanie&apos;s special day!</p>
+  <p class="story action">Grab the ring and show this page to Andy and Melanie. I&apos;m sure they would love to thank you and take a special picture with you for working so hard.</p>
 </div>
   `;
   setContent(page);

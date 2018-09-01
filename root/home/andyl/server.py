@@ -24,7 +24,7 @@ ANSWERS = {
   7: 'file_uploaded',
   8: 'toast',
   9: 'birthdays',
-  10: '',
+  10: 'untildeathdouspart',
 }
 WRONG_ANSWER_RESPONSES = [
   'Not quite...',
