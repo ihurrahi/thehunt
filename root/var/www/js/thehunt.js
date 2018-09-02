@@ -83,7 +83,7 @@ function submit() {
   for(var i = 0; i < elements.length; i++){
     var item = elements.item(i);
     if (item.type !== "button" && item.tagName !== "LABEL") {
-      values.push(item.name + "=" + item.value);
+      values.push(item.name + "=" + encodeURIComponent(item.value));
     }
   }
   var url = URL + "submit" + "?" + values.join("&");
