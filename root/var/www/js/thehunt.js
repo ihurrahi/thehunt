@@ -761,15 +761,13 @@ function setStageNine() {
 function setStageTen() {
    var page = `
 <div>
-  <p class="story">Meaghan thinks that a higher vantage point could help with looking for where the ring is located. From where she is standing, she can see the entire golf course.</p>
-  <p class="story">It&apos;s gotten late and she can&apos;t see anything. Thankfully, there&apos;s a helpful light she found near the railing.</p>
-  <p class="story">The light didn&apos;t help with anything in sight, but maybe a remnant of an old clue can point you in the right direction.</p>
+  <p class="story">Agh! Wher<b>e</b> could the rings be? Meagha<b>n</b> thinks that a higher <b>v</b>antage point could h<b>e</b>lp! If only there was a p<b>l</b>ace where we can see the entire g<b>o</b>lf course. The sun is setting soon but there is a light by the railing to <b>p</b>oint us in the right dir<b>e</b>ction.</p>
   <p class="story action">Help Meaghan find what&apos;s hidden in plain sight!</p>
 ${createSubmitForm(10)}
 </div>
   `;
   setContent(page);
-  setHint("3:");
+  setHint("find the place Meaghan is thinking about");
 }
 
 function setStageEleven() {
