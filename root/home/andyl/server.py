@@ -129,8 +129,8 @@ def submit():
   try:
     user_id = request.cookies.get('user_id')
     table = user_to_table[user_id]
-    stage = int(request.args.get('stage', ''))
-    answer = request.args.get('answer', '').replace(' ', '').lower()
+    stage = int(request.args.get('stage', '0'))
+    answer = (request.args.get('answer', '') or '').replace(' ', '').lower()
     if stage == 3:
       answer = answer.replace('#', '')
     if stage == 7:
