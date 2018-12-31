@@ -176,7 +176,7 @@ function setHeader(table) {
     `;
   } else {
     header = `
-  <h2>Welcome to the The Hunt!</h2>
+  <h2>Welcome to The Hunt!</h2>
     `;
   }
   var headerElement = document.getElementById("header-text");
