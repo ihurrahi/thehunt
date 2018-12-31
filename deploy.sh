@@ -1,4 +1,4 @@
-WEBSITE_DIR=~/Documents/thinkingalaudwebsite/
+WEBSITE_DIR=~/Documents/thehunt/
 SSH_KEY=~/.ssh/google_compute_engine
 USER=andyl
 INSTANCE_IP=35.237.99.26
